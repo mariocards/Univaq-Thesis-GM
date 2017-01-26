@@ -2,15 +2,15 @@
 <ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="MicroservicesArchitecture" nsURI="http://it.univaq.thesis.msa.arch"
     nsPrefix="msa">
-  <eClassifiers xsi:type="ecore:EClass" name="namedElement">
+  <eClassifiers xsi:type="ecore:EClass" name="namedElement" abstract="true">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
         defaultValueLiteral=""/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="System" eSuperTypes="#//namedElement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="ComposedBy" lowerBound="1"
-        upperBound="-1" eType="#//Service" eOpposite="#//Service/Compose"/>
+        upperBound="-1" eType="#//Service" containment="true" eOpposite="#//Service/Compose"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="DividedIn" upperBound="-1"
-        eType="#//Cluster" eOpposite="#//Cluster/divide"/>
+        eType="#//Cluster" containment="true" eOpposite="#//Cluster/divide"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Service" eSuperTypes="#//namedElement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="Compose" eType="#//System"
@@ -18,18 +18,18 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="BelongTo" eType="#//Cluster"
         eOpposite="#//Cluster/Contains"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="owns" upperBound="-1" eType="#//Developer"
-        eOpposite="#//Developer/contribute"/>
+        containment="true" eOpposite="#//Developer/contribute"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="expose" upperBound="-1"
-        eType="#//Interface" eOpposite="#//Interface/exposedBy"/>
+        eType="#//Interface" containment="true" eOpposite="#//Interface/exposedBy"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="use" upperBound="-1" eType="#//Interface"
         eOpposite="#//Interface/usedBy"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="host" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Cluster" eSuperTypes="#//namedElement">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="Contains" eType="#//Service"
-        eOpposite="#//Service/BelongTo"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="divide" upperBound="-1"
-        eType="#//System" eOpposite="#//System/DividedIn"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Contains" upperBound="-1"
+        eType="#//Service" eOpposite="#//Service/BelongTo"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="divide" eType="#//System"
+        eOpposite="#//System/DividedIn"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="context" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Developer" eSuperTypes="#//namedElement">
@@ -45,7 +45,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="usedBy" upperBound="-1"
         eType="#//Service" eOpposite="#//Service/use"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="expose" upperBound="-1"
-        eType="#//Operation" eOpposite="#//Operation/partOf"/>
+        eType="#//Operation" containment="true" eOpposite="#//Operation/partOf"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="endPoint" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="port" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
   </eClassifiers>
@@ -55,14 +55,13 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="visibility" eType="#//Visibility"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="method" eType="#//Methods"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="returnType" eType="#//Message"
-        eOpposite="#//Message/IsReturnType"/>
+        containment="true" eOpposite="#//Message/IsReturnType"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="parameters" eType="#//Message"
-        eOpposite="#//Message/isParameter"/>
+        containment="true" eOpposite="#//Message/isParameter"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Message" eSuperTypes="#//namedElement">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="#//MessageType"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="parts" upperBound="-1"
-        eType="#//Part" eOpposite="#//Part/isPartOf"/>
+        eType="#//Part" containment="true" eOpposite="#//Part/isPartOf"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="IsReturnType" eType="#//Operation"
         eOpposite="#//Operation/returnType"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="isParameter" eType="#//Operation"
@@ -74,9 +73,9 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Part" eSuperTypes="#//namedElement">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="key" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="isPartOf" upperBound="-1"
-        eType="#//Message" eOpposite="#//Message/parts"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="Type" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="isPartOf" eType="#//Message"
+        eOpposite="#//Message/parts"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="Methods">
     <eLiterals name="GET"/>
