@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="MicroservicesArchitecture" nsURI="http://it.univaq.thesis.msa.arch"
+    nsPrefix="msa">
+  <eClassifiers xsi:type="ecore:EClass" name="namedElement">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        defaultValueLiteral=""/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="System" eSuperTypes="#//namedElement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ComposedBy" lowerBound="1"
+        upperBound="-1" eType="#//Service" eOpposite="#//Service/Compose"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="DividedIn" upperBound="-1"
+        eType="#//Cluster" eOpposite="#//Cluster/divide"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Service" eSuperTypes="#//namedElement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Compose" eType="#//System"
+        eOpposite="#//System/ComposedBy"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="BelongTo" eType="#//Cluster"
+        eOpposite="#//Cluster/Contains"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="owns" upperBound="-1" eType="#//Developer"
+        eOpposite="#//Developer/contribute"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="expose" upperBound="-1"
+        eType="#//Interface" eOpposite="#//Interface/exposedBy"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="use" upperBound="-1" eType="#//Interface"
+        eOpposite="#//Interface/usedBy"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="host" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Cluster" eSuperTypes="#//namedElement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Contains" eType="#//Service"
+        eOpposite="#//Service/BelongTo"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="divide" upperBound="-1"
+        eType="#//System" eOpposite="#//System/DividedIn"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="context" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Developer" eSuperTypes="#//namedElement">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="email" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="username" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="contribute" eType="#//Service"
+        eOpposite="#//Service/owns"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Interface" eSuperTypes="#//namedElement">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="exposedBy" eType="#//Service"
+        eOpposite="#//Service/expose"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="usedBy" upperBound="-1"
+        eType="#//Service" eOpposite="#//Service/use"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="expose" upperBound="-1"
+        eType="#//Operation" eOpposite="#//Operation/partOf"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="endPoint" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="port" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Operation" eSuperTypes="#//namedElement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="partOf" eType="#//Interface"
+        eOpposite="#//Interface/expose"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="visibility" eType="#//Visibility"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="method" eType="#//Methods"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="returnType" eType="#//Message"
+        eOpposite="#//Message/IsReturnType"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="parameters" eType="#//Message"
+        eOpposite="#//Message/isParameter"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Message" eSuperTypes="#//namedElement">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="#//MessageType"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="parts" upperBound="-1"
+        eType="#//Part" eOpposite="#//Part/isPartOf"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="IsReturnType" eType="#//Operation"
+        eOpposite="#//Operation/returnType"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="isParameter" eType="#//Operation"
+        eOpposite="#//Operation/parameters"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="MessageType">
+    <eLiterals name="Request"/>
+    <eLiterals name="Response" value="1"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Part" eSuperTypes="#//namedElement">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="key" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="isPartOf" upperBound="-1"
+        eType="#//Message" eOpposite="#//Message/parts"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="Methods">
+    <eLiterals name="GET"/>
+    <eLiterals name="POST" value="1"/>
+    <eLiterals name="PUT" value="2"/>
+    <eLiterals name="PATCH" value="3" literal=""/>
+    <eLiterals name="DELETE" value="4"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="Visibility">
+    <eLiterals name="public"/>
+    <eLiterals name="private" value="1"/>
+    <eLiterals name="package" value="2"/>
+  </eClassifiers>
+</ecore:EPackage>
