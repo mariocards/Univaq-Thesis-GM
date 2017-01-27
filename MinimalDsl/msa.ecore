@@ -52,7 +52,6 @@
   <eClassifiers xsi:type="ecore:EClass" name="Operation" eSuperTypes="#//namedElement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="partOf" eType="#//Interface"
         eOpposite="#//Interface/expose"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="visibility" eType="#//Visibility"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="method" eType="#//Methods"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="returnType" eType="#//Message"
         containment="true" eOpposite="#//Message/IsReturnType"/>
@@ -83,10 +82,5 @@
     <eLiterals name="PUT" value="2"/>
     <eLiterals name="PATCH" value="3" literal=""/>
     <eLiterals name="DELETE" value="4"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EEnum" name="Visibility">
-    <eLiterals name="public"/>
-    <eLiterals name="private" value="1"/>
-    <eLiterals name="package" value="2"/>
   </eClassifiers>
 </ecore:EPackage>
