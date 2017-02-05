@@ -107,7 +107,6 @@ public class DockerParser implements Parser {
 		File[] files = localPath.listFiles();
 		for (int i = 0; i < files.length; i++) {
 			File file = files[i];
-			// logger.info("File name: " + file.getName());
 			if (file.getName().contains("Dockerfile")) {
 				logger.info("Trovato DockerFile:" + file.getName());
 				setDockerFile(getBasDirectory() + "/" + file.getName());
@@ -118,17 +117,16 @@ public class DockerParser implements Parser {
 		return false;
 	}
 
-	@SuppressWarnings("rawtypes")
 	public void dockerComposeReader() {
 		try {
 			Dockerfile dockerfile = new Dockerfile(new File(getDockerComposeFile()), new File(getBasDirectory()));
 			Iterable<DockerfileStatement> statements = dockerfile.getStatements();
 			List<DockerComposeFile> containerName = new ArrayList<DockerComposeFile>();
-			
+
 			// CHECK FOR CONTAINER NAME
 			for (Iterator<DockerfileStatement> iterator = statements.iterator(); iterator.hasNext();) {
 				DockerfileStatement temp = (DockerfileStatement) iterator.next();
-				//System.out.println("DOCKERITEM: " + temp.toString());
+				// System.out.println("DOCKERITEM: " + temp.toString());
 				// If Contains the word cotainer_name, this represent a
 				// Microservices
 				if (temp.toString().contains("container_name")) {
@@ -143,25 +141,22 @@ public class DockerParser implements Parser {
 			Iterator<DockerComposeFile> containerIterator = containerName.iterator();
 			while (containerIterator.hasNext()) {
 				DockerComposeFile containerTemp = containerIterator.next();
-				//System.out.println("Prendo " + containerTemp.getContainerName());
+				// System.out.println("Prendo " +
+				// containerTemp.getContainerName());
 				for (Iterator<DockerfileStatement> iterator = statements.iterator(); iterator.hasNext();) {
 					DockerfileStatement temp = (DockerfileStatement) iterator.next();
-					//System.out.println(containerTemp.getContainerName() + " Compared to " + temp.toString());
+					// System.out.println(containerTemp.getContainerName() + "
+					// Compared to " + temp.toString());
 					if (containerTemp.getContainerName().equals(temp.toString())) {
 						containerCounter = 1;
 						while (iterator.hasNext()) {
 							DockerfileStatement temp2 = iterator.next();
-							//System.out.println("New Item: " + temp2.toString());
+							// System.out.println("New Item: " +
+							// temp2.toString());
 							if (!temp2.toString().contains("container_name")) {
-
 								if (temp2.toString().contains("build")) {
-									//System.out
-											//.println("Is the " + containerTemp.getContainerName() + " relative build ");
 									containerTemp.setBuild(temp2.toString());
-
 								} else if (temp2.toString().contains("dockerfile")) {
-									//System.out.println(
-											//"Is the " + containerTemp.getContainerName() + " relative Dcokerfile ");
 									containerTemp.setDockerFile(temp2.toString());
 								}
 							} else {
@@ -172,8 +167,6 @@ public class DockerParser implements Parser {
 
 				}
 			}
-
-			// Now i have a
 			parseDockerCompose(containerName);
 		} catch (IOException e) {
 			// TODO: handle exception
@@ -194,55 +187,45 @@ public class DockerParser implements Parser {
 			File baseDirectory = null;
 			Dockerfile dockerInst = null;
 			MicroService microservice = new MicroService();
-			
+
 			microservice.setName(ContainerName);
 			if (dockercompose.getBuild() != null) {
 				buildPoint = extractvalue(dockercompose.getBuild());
 				if (buildPoint.equals(".")) {
 					baseDirectory = new File(this.basDirectory + "/");
-				}else{
+				} else {
 					baseDirectory = new File(this.basDirectory + "/" + buildPoint);
 				}
-				
-			}else{
+
+			} else {
 				baseDirectory = new File(this.basDirectory + "/");
 			}
-			//System.out.println("baseDirectory: " + baseDirectory.getAbsolutePath());
 			if (dockercompose.getDockerFile() != null) {
-				
+
 				dockerFileName = extractvalue(dockercompose.getDockerFile());
-				//System.out.println("dockerFileName: " + dockerFileName);
-				dockerFile = new File(this.basDirectory + "/" +dockerFileName);
-				//System.out.println("dockerFile: " + dockerFile);
+				dockerFile = new File(this.basDirectory + "/" + dockerFileName);
 				dockerInst = new Dockerfile(dockerFile, new File(this.basDirectory + "/"));
 				microservice.setDockerfile(dockerInst);
 			}
-			
-			
+
 			microServices.add(microservice);
 		}
 		this.microServicesArch.setServices(microServices);
 
 	}
 
-	@SuppressWarnings("rawtypes")
 	public void dockerFilereader() {
-		
+
 		List<MicroService> microservices = getMicroServicesArch().getServices();
 		Iterator<MicroService> it = microservices.iterator();
 		while (it.hasNext()) {
 			MicroService microService = (MicroService) it.next();
 			try {
 				Dockerfile dockerfile = microService.getDockerfile();
-				@SuppressWarnings("rawtypes")
 				Iterable<DockerfileStatement> statements = dockerfile.getStatements();
-				@SuppressWarnings("rawtypes")
 				DockerfileStatement expose = null;
-				for (@SuppressWarnings("rawtypes")
-				Iterator iterator = statements.iterator(); iterator.hasNext();) {
-					@SuppressWarnings("rawtypes")
+				for (Iterator iterator = statements.iterator(); iterator.hasNext();) {
 					DockerfileStatement temp = (DockerfileStatement) iterator.next();
-					//System.out.println("DOCKERITEM: " + temp.toString());
 					if (temp.toString().contains("EXPOSE")) {
 						expose = (DockerfileStatement) temp;
 					}
@@ -250,35 +233,17 @@ public class DockerParser implements Parser {
 				}
 				List<Integer> ports = extractPorts(expose.toString());
 				microService.setPorts(ports);
-				
- 
+
 			} catch (IOException e) {
 				// TODO: handle exception
 			} catch (NullPointerException nu) {
 				nu.getStackTrace();
 			}
-			
+
 		}
-		
+
 	}
 
-	// public String extractBuild(String key) {
-	// if (key.isEmpty()|| key.equals(null)) return "";
-	// Scanner in = new Scanner(key).useDelimiter("[^build]: [a-z]+");
-	// String result = null;
-	// while(in.hasNext()){
-	// result = in.next();
-	// //System.out.println("Build " + result);
-	// }
-	// return result;
-	// }
-	//
-	// public String extractDockerFile(String key) {
-	// if (key.isEmpty()|| key.equals(null)) return "";
-	// Scanner in = new Scanner(key).useDelimiter("[^dockerfile]: [a-z]+");
-	//
-	// return result;
-	// }
 	public String extractvalue(String key) {
 		if (key.isEmpty() || key.equals(null))
 			return "";
@@ -293,12 +258,6 @@ public class DockerParser implements Parser {
 		List<Integer> ports = new ArrayList<Integer>();
 		while (in.hasNext()) {
 			ports.add(new Integer(in.nextInt()));
-		}
-		Iterator<Integer> iter = ports.iterator();
-		while (iter.hasNext()) {
-			Integer temp = iter.next();
-			//System.out.println("Port: " + temp.toString());
-
 		}
 
 		return ports;
