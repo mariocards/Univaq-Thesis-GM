@@ -1,18 +1,26 @@
 ﻿Ambiente
+
 Sistema Operativo Macchina Host
+
 Linux Kubuntu 16.04
+
 Linux kernel version 4.4.0-31-generic
+
 Docker Client/ Server
+
 Client:
+
         Version:      1.13.0
         API version:  1.25
         Go version:   go1.7.3
         Git commit:   49bf474
         Built:        Tue Jan 17 09:58:26 2017
         OS/Arch:      linux/amd64
+        
 
 
 Server:
+
         Version:      1.13.0
         API version:  1.25 (minimum version 1.12)
         Go version:   go1.7.3
@@ -20,22 +28,35 @@ Server:
         Built:        Tue Jan 17 09:58:26 2017
         OS/Arch:      linux/amd64
         Experimental: false
+        
 
 
 Docker Machine : docker-machine version 0.9.0, build 15fd4c7
+
 Docker Compose: docker-compose version 1.10.0, build 4bd6f1
+
 Virtual Box: 5.0.32
+
 Sviluppo
+
 Eclipse version: Neon.2 Release (4.6.2)
+
 Maven: Apache Maven 3.3.9
+
 Git version: 2.7.4
+
 Nodejs version: 4.2.6
+
 NPM version: 3.5.2
+
 Java version: openjdk 1.8.0_121
 
 
+
 Guida
+
 Docker
+
 Installazione Docker run:
 
 
