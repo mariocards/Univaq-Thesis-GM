@@ -17,6 +17,12 @@ public class MicroService {
 	private List<ServiceInterface> consumingInterface;
 
 	private List<Develeper> devs;
+	
+	private String ip;
+	
+	private String containerID;
+	
+	private String network;
 
 	public MicroService() {
 		super();
@@ -71,4 +77,29 @@ public class MicroService {
 		this.name = name;
 	}
 
+	public String getIp() {
+		return ip;
+	}
+
+	public void setIp(String ip) {
+		this.ip = ip;
+	}
+
+	public String getContainerID() {
+		return containerID;
+	}
+
+	public void setContainerID(String containerID) {
+		this.containerID = containerID;
+	}
+
+	public String getNetwork() {
+		return network;
+	}
+
+	public void setNetwork(String network) {
+		this.network = network;
+	}
+
+	
 }

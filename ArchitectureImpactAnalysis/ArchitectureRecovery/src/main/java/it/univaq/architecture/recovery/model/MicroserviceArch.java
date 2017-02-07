@@ -1,7 +1,7 @@
 package it.univaq.architecture.recovery.model;
 
 import java.util.Iterator;
-import java.util.List;import org.hibernate.validator.internal.util.privilegedactions.GetMethodFromPropertyName;
+import java.util.List;
 
 
 public class MicroserviceArch {

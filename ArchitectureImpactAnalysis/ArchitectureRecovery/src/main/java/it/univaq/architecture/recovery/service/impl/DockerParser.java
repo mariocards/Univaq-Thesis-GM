@@ -12,6 +12,7 @@ import org.apache.log4j.Logger;
 import com.github.dockerjava.core.dockerfile.Dockerfile;
 import com.github.dockerjava.core.dockerfile.DockerfileStatement;
 
+
 import it.univaq.architecture.recovery.model.DockerComposeFile;
 import it.univaq.architecture.recovery.model.MicroService;
 import it.univaq.architecture.recovery.model.MicroserviceArch;
@@ -120,6 +121,7 @@ public class DockerParser implements Parser {
 	public void dockerComposeReader() {
 		try {
 			Dockerfile dockerfile = new Dockerfile(new File(getDockerComposeFile()), new File(getBasDirectory()));
+
 			Iterable<DockerfileStatement> statements = dockerfile.getStatements();
 			List<DockerComposeFile> containerName = new ArrayList<DockerComposeFile>();
 
@@ -128,6 +130,7 @@ public class DockerParser implements Parser {
 				DockerfileStatement temp = (DockerfileStatement) iterator.next();
 				// System.out.println("DOCKERITEM: " + temp.toString());
 				// If Contains the word cotainer_name, this represent a
+//				temp.ge
 				// Microservices
 				if (temp.toString().contains("container_name")) {
 					DockerComposeFile container = new DockerComposeFile();
@@ -136,23 +139,20 @@ public class DockerParser implements Parser {
 				}
 
 			}
-			// //CHECK ASSOCIATE CONTAINER NAME TO DOCKER FILE
+			// Association Container Name to relative Build path and dockerFile name
 			int containerCounter = 0;
 			Iterator<DockerComposeFile> containerIterator = containerName.iterator();
 			while (containerIterator.hasNext()) {
 				DockerComposeFile containerTemp = containerIterator.next();
-				// System.out.println("Prendo " +
-				// containerTemp.getContainerName());
+
 				for (Iterator<DockerfileStatement> iterator = statements.iterator(); iterator.hasNext();) {
 					DockerfileStatement temp = (DockerfileStatement) iterator.next();
-					// System.out.println(containerTemp.getContainerName() + "
-					// Compared to " + temp.toString());
+
 					if (containerTemp.getContainerName().equals(temp.toString())) {
 						containerCounter = 1;
 						while (iterator.hasNext()) {
 							DockerfileStatement temp2 = iterator.next();
-							// System.out.println("New Item: " +
-							// temp2.toString());
+
 							if (!temp2.toString().contains("container_name")) {
 								if (temp2.toString().contains("build")) {
 									containerTemp.setBuild(temp2.toString());
@@ -167,6 +167,7 @@ public class DockerParser implements Parser {
 
 				}
 			}
+			// Start Parsing
 			parseDockerCompose(containerName);
 		} catch (IOException e) {
 			// TODO: handle exception
