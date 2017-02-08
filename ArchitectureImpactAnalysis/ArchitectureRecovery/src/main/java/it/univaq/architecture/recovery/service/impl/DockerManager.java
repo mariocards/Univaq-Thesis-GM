@@ -2,10 +2,11 @@ package it.univaq.architecture.recovery.service.impl;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-
-import org.codehaus.jackson.map.ObjectMapper;
+import java.util.Map;
 
 import it.univaq.architecture.recovery.model.MicroService;
 
@@ -40,10 +41,31 @@ public class DockerManager {
 			}
 
 		}
+		
 		return richServices;
 	}
 
-	
+	public String getClientIP(String network){
+		String clientIP = null;
+		Process p;
+		String s = null;
+		try {
+			p = Runtime.getRuntime().exec("docker network " + network);
+			BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
+
+			while ((s = br.readLine()) != null) {
+				if (s.contains("Gateway")) {
+					clientIP = s.substring(s.indexOf(":"), s.lastIndexOf('"'));
+				}
+
+			}
+			p.waitFor();
+			p.destroy();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return clientIP;
+	}
 
 	public List<MicroService> getContainerId(List<MicroService> services) {
 		// String result = this.reader("docker ps");
@@ -74,6 +96,21 @@ public class DockerManager {
 
 		return richServices;
 
+	}
+	public List<String> checkIfContainerHasTheSameNetwork(List<MicroService> containers){
+		List<String> networks = new ArrayList<String>();
+		
+		
+		Iterator<MicroService> it = containers.iterator();
+		while (it.hasNext()) {
+			MicroService microService = (MicroService) it.next();
+			if(!networks.contains(microService.getNetwork())){
+				networks.add(microService.getNetwork());
+			}
+		}
+		
+		
+		return networks;
 	}
 
 }

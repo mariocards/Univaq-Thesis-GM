@@ -20,6 +20,7 @@ import com.github.dockerjava.core.DockerClientConfig;
 import it.univaq.architecture.recovery.model.MicroserviceArch;
 import it.univaq.architecture.recovery.service.impl.DockerManager;
 import it.univaq.architecture.recovery.service.impl.DockerParser;
+import it.univaq.architecture.recovery.service.impl.TcpReconstructor;
 
 @SpringBootApplication
 @ComponentScan(basePackages = { "it.univaq.architecture.recovery.service.impl.*" })
@@ -61,7 +62,14 @@ public class ArchitectureRecoveryApplication {
 		DockerManager manager = new DockerManager();
 		manager.getContainerId(microServicesArch.getServices());
 		manager.getNetwork(microServicesArch.getServices());
+		microServicesArch.setNetworkName(manager.checkIfContainerHasTheSameNetwork(microServicesArch.getServices()));
 		
+		microServicesArch.setClientIp(manager.getClientIP(microServicesArch.getNetworkName().get(0)));
+		
+		
+		TcpReconstructor reconstructore = new TcpReconstructor();
+		
+		reconstructore.valutateResult(microServicesArch, microServicesArch.getClientIp());
 
 	}
 }
