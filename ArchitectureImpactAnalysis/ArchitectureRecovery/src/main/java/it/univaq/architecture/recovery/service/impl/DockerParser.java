@@ -25,6 +25,7 @@ public class DockerParser implements Parser {
 	private String dockerFile;
 	private String dockerComposeFile;
 	private MicroserviceArch microServicesArch;
+	private int containerCounter;
 
 	public String getBasDirectory() {
 		return basDirectory;
@@ -128,19 +129,22 @@ public class DockerParser implements Parser {
 			// CHECK FOR CONTAINER NAME
 			for (Iterator<DockerfileStatement> iterator = statements.iterator(); iterator.hasNext();) {
 				DockerfileStatement temp = (DockerfileStatement) iterator.next();
-				// System.out.println("DOCKERITEM: " + temp.toString());
+				
 				// If Contains the word cotainer_name, this represent a
 //				temp.ge
 				// Microservices
 				if (temp.toString().contains("container_name")) {
-					DockerComposeFile container = new DockerComposeFile();
-					container.setContainerName(temp.toString());
-					containerName.add(container);
+					
+					if(temp.toString() != null &&temp.toString() != "" ){
+						DockerComposeFile container = new DockerComposeFile();
+						container.setContainerName(temp.toString());
+						containerName.add(container);	
+					}
+					
 				}
 
 			}
-			// Association Container Name to relative Build path and dockerFile name
-			int containerCounter = 0;
+			containerCounter = 0;
 			Iterator<DockerComposeFile> containerIterator = containerName.iterator();
 			while (containerIterator.hasNext()) {
 				DockerComposeFile containerTemp = containerIterator.next();
@@ -207,6 +211,9 @@ public class DockerParser implements Parser {
 				dockerFile = new File(this.basDirectory + "/" + dockerFileName);
 				dockerInst = new Dockerfile(dockerFile, new File(this.basDirectory + "/"));
 				microservice.setDockerfile(dockerInst);
+			}else{
+//				Per i Database che non hai dockerfile bisogna inventarsi qualcosa
+//				microservice.setDockerfile(new Dockerfile(new File(""),new File(this.basDirectory + "/")));
 			}
 
 			microServices.add(microservice);

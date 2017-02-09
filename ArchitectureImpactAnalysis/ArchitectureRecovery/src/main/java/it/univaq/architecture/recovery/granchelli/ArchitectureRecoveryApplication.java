@@ -12,11 +12,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
-import com.github.dockerjava.api.DockerClient;
-import com.github.dockerjava.core.DefaultDockerClientConfig;
-import com.github.dockerjava.core.DockerClientBuilder;
-import com.github.dockerjava.core.DockerClientConfig;
-
 import it.univaq.architecture.recovery.model.MicroserviceArch;
 import it.univaq.architecture.recovery.service.impl.DockerManager;
 import it.univaq.architecture.recovery.service.impl.DockerParser;
@@ -35,7 +30,7 @@ public class ArchitectureRecoveryApplication {
 
 	
 	public static void main(String[] args)
-			throws IOException, InvalidRemoteException, TransportException, GitAPIException {
+			throws IOException, InvalidRemoteException, TransportException, GitAPIException, InterruptedException {
 		SpringApplication.run(ArchitectureRecoveryApplication.class, args);
 		
 //		this.repoManager.setLocalPath("/home/grankellowsky/Tesi/Codice/prova2");
@@ -51,21 +46,21 @@ public class ArchitectureRecoveryApplication {
 		DockerParser dockerParser = new DockerParser(microServicesArch);
 		// dockerParser.setBasDirectory("/home/grankellowsky/Tesi/Codice/prova2");
 		dockerParser.setBasDirectory("/home/grankellowsky/Tesi/Codice/dockerProject/acmeair-nodejs");
-
 		dockerParser.find();
-		logger.info("DockerCompose Extractor:");
-		microServicesArch.toString();
+		
+		
+		
 		logger.info("=========================");
 		logger.info("Docker Reader Starting:");
 		dockerParser.dockerFilereader();
-		microServicesArch.toString();
+		
 		DockerManager manager = new DockerManager();
 		manager.getContainerId(microServicesArch.getServices());
 		manager.getNetwork(microServicesArch.getServices());
 		microServicesArch.setNetworkName(manager.checkIfContainerHasTheSameNetwork(microServicesArch.getServices()));
 		
 		microServicesArch.setClientIp(manager.getClientIP(microServicesArch.getNetworkName().get(0)));
-		
+//		Thread.sleep(1000);
 		
 		TcpReconstructor reconstructore = new TcpReconstructor();
 		

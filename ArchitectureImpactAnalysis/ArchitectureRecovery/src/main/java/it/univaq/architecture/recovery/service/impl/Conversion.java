@@ -15,10 +15,26 @@ import it.univaq.architecture.recovery.model.MicroService;
 public class Conversion {
 
 	MSALoaderImpl factory;
+	MSALoaderImpl factory2;
 
 	public Conversion() {
 		super();
 		this.factory = new MSALoaderImpl();
+		this.factory2 = new MSALoaderImpl();
+	}
+
+	public void cloneNodesMSA(SystemMSA original, SystemMSA copy, String ServiceDiscovery) {
+		Iterator<Service> originalServices = original.getComposedBy().iterator();
+		while (originalServices.hasNext()) {
+			Service service = (Service) originalServices.next();
+			if (!service.getHost().trim().equals(ServiceDiscovery.trim())
+					|| !ServiceDiscovery.equals(service.getHost().trim())) {
+				Service temp = factory.createService();
+				temp.setHost(service.getHost());
+				temp.setName(service.getName());
+				copy.getComposedBy().add(temp);
+			}
+		}
 	}
 
 	public void getNode(SystemMSA system, List<MicroService> services) {
@@ -26,26 +42,21 @@ public class Conversion {
 		System.out.println("====Conversione da MicroService in un SystemMSA");
 		while (it.hasNext()) {
 			MicroService microService = (MicroService) it.next();
-			System.out.println("Microservice name: " + microService.getName() + "ContainerID: "
-					+ microService.getContainerID() + "IP: " + microService.getIp());
-			System.out.println("..convertito in:");
-			Service servizio = factory.createService();
-			servizio.setName(microService.getName().trim());
-			servizio.setHost(microService.getIp().trim());
-			System.out.println("Servizio Name " + servizio.getName() + "HostName: " + servizio.getHost());
-			system.getComposedBy().add(servizio);
+			// System.out.println("Microservice name: " + microService.getName()
+			// + "ContainerID: "
+			// + microService.getContainerID() + "IP: " + microService.getIp());
+			// System.out.println("..convertito in:");
+			if (microService.getName().trim() != null && microService.getIp().trim() != null) {
+				Service servizio = factory.createService();
+				servizio.setName(microService.getName().trim());
+				servizio.setHost(microService.getIp().trim());
+				// System.out.println("Servizio Name " + servizio.getName() +
+				// "HostName: " + servizio.getHost());
+				system.getComposedBy().add(servizio);
+			}
 
 		}
-
-	}
-
-	public void getOutgoinArrow() {
-
-	}
-
-	public void getIngoingArrow() {
-
-		// Check Try to get
+		System.out.println("====FINE Conversione");
 
 	}
 
@@ -55,10 +66,12 @@ public class Conversion {
 		while (it.hasNext()) {
 
 			Service tep = it.next();
-			// System.out.println(ipDestination + " Controllo: " +
+			// System.out.println(ipDestination + "Detect Service Controllo: " +
 			// tep.getHost());
-			if (tep.getHost().trim().contains(ipDestination) || ipDestination.trim().contains(tep.getHost())
-					|| tep.getHost().trim().equals(ipDestination) || ipDestination.trim().equals(tep.getHost())) {
+			if (tep.getHost() != null && ipDestination != null
+					&& (tep.getHost().trim().equals(ipDestination) || ipDestination.trim().equals(tep.getHost())
+							|| tep.getHost().trim().equals(ipDestination)
+							|| ipDestination.trim().equals(tep.getHost()))) {
 				return tep;
 			}
 		}
@@ -72,34 +85,35 @@ public class Conversion {
 		Iterator<Service> it = system.getComposedBy().iterator();
 		while (it.hasNext()) {
 			Service service = it.next();
+			System.out.println("");
 			System.out.println("The service Name:" + service.getName().toUpperCase() + " Host: " + service.getHost());
-
-			Iterator<Interface> its = service.getExpose().iterator();
-			System.out.println("Is Consumed by: ");
 			System.out.println(" ");
+			Iterator<Interface> its = service.getExpose().iterator();
+			System.out.println("Espone Interfacce per i Seguenti Servizi: ");
+
 			while (its.hasNext()) {
 				Interface interface1 = (Interface) its.next();
 				Iterator<Service> itu = interface1.getUsedBy().iterator();
-
+				System.out.println("Interface: " + interface1.getEndPoint() + " Name: " + interface1.getName());
 				while (itu.hasNext()) {
 					Service service2 = (Service) itu.next();
-					System.out.println("> " + service2.getName());
+					System.out.println("> " + service2.getName().toUpperCase());
 				}
 				System.out.println(" ");
 			}
 
 			Iterator<Interface> its2 = service.getUse().iterator();
-			System.out.println("Consumes: ");
+			System.out.println("Consuma i seguenti servizi: ");
 			System.out.println(" ");
 			while (its2.hasNext()) {
 				Interface interface1 = (Interface) its2.next();
 				Iterator<Service> itu = interface1.getUsedBy().iterator();
-
+				System.out.println("Interface: " + interface1.getEndPoint() + " Name: " + interface1.getName());
 				while (itu.hasNext()) {
 					Service service2 = (Service) itu.next();
-					System.out.println("> " + service2.getName());
+					System.out.println("> " + service2.getName().toUpperCase());
 				}
-				System.out.println(" ");
+
 			}
 		}
 		System.out.println("");
@@ -230,68 +244,165 @@ public class Conversion {
 
 	}
 
-	private String getOperation(String line, int times) {
-		int occurence = 0;
-		int index = 0;
-		String operation = null;
-		switch (StringUtils.countOccurrencesOf(line, "/")) {
-			case 4:
-			case 5:
-				for (int i = 0; i < line.length(); i++) {
-					char cr = line.charAt(i);
-					if (cr == '/') {
-						occurence++;
-						if (occurence == 4) {
-							index = i;
-							operation = line.substring(i);
-							return operation;
-						}
-					}
-				}
-			case 6:
-				for (int i = 0; i < line.length(); i++) {
-					char cr = line.charAt(i);
-					if (cr == '/') {
-						occurence++;
-						if (occurence == 5) {
-							index = i;
-							operation = line.substring(i);
-							return operation;
-						}
-					}
-				}
-			case 7:
-				for (int i = 0; i < line.length(); i++) {
-					char cr = line.charAt(i);
-					if (cr == '/') {
-						occurence++;
-						if (occurence == 6) {
-							index = i;
-							operation = line.substring(6);
-							return operation;
-						}
-					}
-				}
-			default:
-				return operation;
-		
+	public Interface getInterfaceByEndPoint(Service service, String endPoint) {
+		Iterator<Interface> it = service.getUse().iterator();
+		Iterator<Interface> it2 = service.getExpose().iterator();
+		while (it.hasNext()) {
+			Interface tempInterface = (Interface) it.next();
+			if (tempInterface.getEndPoint().trim().equals(endPoint.trim())
+					|| endPoint.trim().equals(tempInterface.getEndPoint().trim())) {
+				return tempInterface;
+			}
 		}
-		
+		while (it2.hasNext()) {
+			Interface tempInterface = (Interface) it2.next();
+			if (tempInterface.getEndPoint().trim().equals(endPoint.trim())
+					|| endPoint.trim().equals(tempInterface.getEndPoint().trim())) {
+				return tempInterface;
+			}
+		}
+		return null;
+
 	}
+
+	public boolean existInterface(Service service, String endPoint) {
+		Iterator<Interface> it = service.getUse().iterator();
+		Iterator<Interface> it2 = service.getExpose().iterator();
+		System.out.println("Ckeck di presenza di Interfaccia: " + endPoint + " Del servizio: " + service.getName());
+		while (it.hasNext()) {
+			Interface tempInterface = (Interface) it.next();
+			// System.out.println("confronto ");
+			// System.out.println("Interfac" +
+			// tempInterface.getEndPoint().trim());
+			System.err.println("tempInterface.getEndPoint().trim(): " + tempInterface.getEndPoint().trim() + " EndPoint: " + endPoint.trim());
+			if (tempInterface.getEndPoint().trim().equals(endPoint.trim()) || endPoint.trim().equals(tempInterface.getEndPoint().trim())) {
+				System.out.println("Interface is the same");
+				return true;
+			}
+		}
+		while (it2.hasNext()) {
+			Interface tempInterface = (Interface) it2.next();
+			// System.out.println("confronto ");
+			// System.out.println("Interfac" +
+			// tempInterface.getEndPoint().trim());
+			System.err.println("tempInterface.getEndPoint().trim(): " + tempInterface.getEndPoint().trim() + " EndPoint: " + endPoint.trim());
+			if (tempInterface.getEndPoint().trim().equals(endPoint.trim()) || endPoint.trim().equals(tempInterface.getEndPoint().trim())) {
+				System.out.println("Interface is the same");
+				return true;
+			}
+		}
+		// System.out.println("FALSE");
+		return false;
+	}
+
+	public void createDependency(String callingHost, String destinationCall, SystemMSA systemLogic, String logLine) {
+
+		Service callingHostService = getServiceByIp(systemLogic, callingHost);
+		Service destinationCallService = getServiceByIp(systemLogic, destinationCall);
+
+		Interface destinationCallInterface = null;
+		Interface callingHostInterface = null;
+
+		String url = null;
+		String endPoint = null, operation = null, name = null;
+		int caller = 0, called = 0;
+		url = logLine.substring(logLine.indexOf("/"), logLine.indexOf("HTTP/1.1")).trim();
+		operation = getOperation(url, 5);
+
+		// Crea Servizio destinatioHost
+		// Crea interfaccia che verra' consumata
+
+		// Check se Chiamante e Chiamato sono gia' all'interno dell'architettura
+		// logica
+		System.out.println(callingHostService.getName() + " CALLS > " + destinationCallService.getName());
+		if (StringUtils.countOccurrencesOf(url, "/") >= 2) {
+			// Check Existence Interface
+			endPoint =  getEndPoint(url, StringUtils.countOccurrencesOf(url, "/"));
+			System.out.println("EndPoint risultante: " + endPoint);
+			name = getEndPoint(url,StringUtils.countOccurrencesOf(url, "/"));
+			name = name.substring(name.lastIndexOf("/"));
+			System.out.println("Nome Risultante: " + name);
+			if (!existInterface(destinationCallService, endPoint)) {
+				destinationCallInterface = factory2.createInterface();
+				destinationCallInterface.setName(name);
+				destinationCallInterface.setPort(8080);
+				destinationCallInterface.setEndPoint(getEndPoint(url, 4));
+			} else {
+				destinationCallInterface = getInterfaceByEndPoint(destinationCallService, endPoint);
+			}
+
+			destinationCallInterface.setExposedBy(destinationCallService);
+
+
+			Operation calledOperation = factory2.createOperation();
+			calledOperation.setPartOf(destinationCallInterface);
+			calledOperation.setName(operation);
+			destinationCallInterface.getExpose().add(calledOperation);
+
+			destinationCallInterface.getUsedBy().add(callingHostService);
+			callingHostService.getUse().add(destinationCallInterface);
+//			systemLogic.getComposedBy().add(callingHostService);
+//			systemLogic.getComposedBy().add(destinationCallService);
+		}
+
+		// Assegna i due servizi a system logic
+
+		// fa consumare a callingHost
+
+	}
+
+	private boolean logicServiceExist(SystemMSA systemLogic, String callingHost) {
+
+		Iterator<Service> it = systemLogic.getComposedBy().iterator();
+		while (it.hasNext()) {
+			Service service = (Service) it.next();
+			System.out.println("Service: " + service + " ");
+			if (service.getHost().trim().equals(callingHost.trim())
+					|| callingHost.trim().equals(service.getHost().trim())) {
+				System.out.println("Service: " + service + " already existem");
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private Service getServiceByIp(SystemMSA systemArchitecture, String serviceIP) {
+
+		Iterator<Service> it = systemArchitecture.getComposedBy().iterator();
+		while (it.hasNext()) {
+			Service service = (Service) it.next();
+			if (service != null && (service.getHost().trim().equals(serviceIP.trim())
+					|| serviceIP.trim().equals(service.getHost().trim()))) {
+				return service;
+			} else {
+
+			}
+		}
+		System.out.println();
+		return factory.createService();
+	}
+
 
 	private String getEndPoint(String line, int times) {
 		int occurence = 0;
 		int index = 0;
 		String endPoint = null;
+		System.out.println("Arrivata la Stringa :" + line);
 		switch (StringUtils.countOccurrencesOf(line, "/")) {
+		case 1:
+			return line;
+		case 2:
+			return line;
+		case 3:
+			return line;
 		case 4:
 			// caso /container/rest/api/interface no paramenter
 			for (int i = 0; i < line.length(); i++) {
 				char cr = line.charAt(i);
 				if (cr == '/') {
 					occurence++;
-					if (occurence == 4) {
-						endPoint = line;
+					if (occurence == 3) {
+						endPoint = line.substring(0, i);
 						return endPoint;
 					}
 				}
@@ -305,8 +416,7 @@ public class Conversion {
 				if (cr == '/') {
 					occurence++;
 					if (occurence == 5) {
-						index = i;
-						endPoint = line;
+						endPoint = line.substring(0, i);
 						return endPoint;
 					}
 				}
@@ -320,8 +430,7 @@ public class Conversion {
 				if (cr == '/') {
 					occurence++;
 					if (occurence == 6) {
-						index = i;
-						endPoint = line.substring(0, index);
+						endPoint = line.substring(0, i);
 						return endPoint;
 					}
 				}
@@ -334,46 +443,64 @@ public class Conversion {
 				if (cr == '/') {
 					occurence++;
 					if (occurence == 6) {
-						endPoint = line.substring(0, i);
+						endPoint = line.substring(0, i-1);
 						return endPoint;
 					}
 				}
 			}
 		default:
-			return endPoint;
+			return line;
 		}
 
 	}
 
-	public Interface getInterfaceByEndPoint(Service service, String endPoint) {
-		Iterator<Interface> it = service.getUse().iterator();
-		while (it.hasNext()) {
-			Interface tempInterface = (Interface) it.next();
-			if (tempInterface.getEndPoint().trim().equals(endPoint.trim())
-					|| endPoint.trim().equals(tempInterface.getEndPoint().trim())) {
-				return tempInterface;
+	private String getOperation(String line, int times) {
+		int occurence = 0;
+		int index = 0;
+		String operation = null;
+		switch (StringUtils.countOccurrencesOf(line, "/")) {
+		case 4:
+		case 5:
+			for (int i = 0; i < line.length(); i++) {
+				char cr = line.charAt(i);
+				if (cr == '/') {
+					occurence++;
+					if (occurence == 4) {
+						index = i;
+						operation = line.substring(i);
+						return operation;
+					}
+				}
 			}
-		}
-		return null;
-
-	}
-
-	public boolean existInterface(Service service, String endPoint) {
-		Iterator<Interface> it = service.getUse().iterator();
-
-		while (it.hasNext()) {
-			Interface tempInterface = (Interface) it.next();
-			System.out.println("confronto ");
-			System.out.println("Interfac" + tempInterface.getEndPoint().trim());
-			System.err.println("EndPoint" + endPoint.trim());
-			if (tempInterface.getEndPoint().trim().equals(endPoint.trim())
-					|| endPoint.trim().equals(tempInterface.getEndPoint().trim())) {
-				System.out.println("TRUE");
-				return true;
+		case 6:
+			for (int i = 0; i < line.length(); i++) {
+				char cr = line.charAt(i);
+				if (cr == '/') {
+					occurence++;
+					if (occurence == 5) {
+						index = i;
+						operation = line.substring(i);
+						return operation;
+					}
+				}
 			}
+		case 7:
+			for (int i = 0; i < line.length(); i++) {
+				char cr = line.charAt(i);
+				if (cr == '/') {
+					occurence++;
+					if (occurence == 6) {
+						index = i;
+						operation = line.substring(6);
+						return operation;
+					}
+				}
+			}
+		default:
+			return line;
+
 		}
-		System.out.println("FALSE");
-		return false;
+
 	}
 
 }

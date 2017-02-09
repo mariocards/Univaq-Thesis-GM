@@ -4,15 +4,12 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.InputStreamReader;
-import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Scanner;
 
 import org.eclipse.emf.common.util.EList;
 
-import MicroservicesArchitecture.Interface;
 import MicroservicesArchitecture.Service;
 import MicroservicesArchitecture.SystemMSA;
 import it.univaq.architecture.recovery.model.MicroService;
@@ -53,21 +50,29 @@ public class TcpReconstructor {
 	}
 
 	// Service Discovery Well Known
-	public List<MicroService> valutateResult(MicroserviceArch msa, String clientIP) {
+	public List<MicroService> valutateResult(MicroserviceArch msa, String clientIP) throws InterruptedException {
 
 		// List<MicroService> richService = msa.getServices();
 		String s = null;
 
-		File file = new File("/home/grankellowsky/Tesi/Codice/logging/tcptrack/tcpdump_log.txt");
+		File file = new File("/home/grankellowsky/Tesi/Codice/logging/tcptrack/tcpdump_long_log.txt");
 		// Iterator<MicroService> it = msa.getServices().services.iterator();
-		Scanner in = null;
-
 		// Creazione Testa
 
 		SystemMSA system = factory.createSystemMSA();
 		system.setName("AcmeAIR");
+
+		Service callingClient = factory.createService();
+		callingClient.setCompose(system);
+		callingClient.setHost(clientIP);
+		callingClient.setName("Client");
+		system.getComposedBy().add(callingClient);
+//		Thread.sleep(2000);
+
+		// Conversione da Middle Classa A DSL
 		converter.getNode(system, msa.getServices());
 
+		// Thread.sleep(2000);
 		// while (it.hasNext()) {
 		// MicroService microService = (MicroService) it.next();
 		try {
@@ -79,22 +84,31 @@ public class TcpReconstructor {
 			while ((s = br.readLine()) != null) {
 				if (s.contains("HTTP:") && !s.contains(".js") && !s.contains(".css") && !s.contains(".png")
 						&& !s.contains(".jpg") && !s.contains("304 Not Modified")) {
-					System.out.println(s);
+					// System.out.println(s);
 					filtedLog[index] = s;
 					index++;
 				}
 			}
 			br.close();
-			System.out.println("Read Size Log" + index);
+			Thread.sleep(2000);
+			// System.out.println("Read Size Log" + index);
 			String realLog[] = new String[index];
 			realLog = Arrays.copyOf(filtedLog, index);
 
-			String serviceDiscovery = getServiceDiscovery();
-			system = reconstructPhysicArchitecture(realLog, system);
-			converter.printConversionState(system);
-			converter.printDependencies(system);
-			
-			
+			// Elimina possibili servizi fantasma
+			checkConsistency(system);
+
+			system = reconstructPhysicArchitecture(realLog, system, clientIP);
+			// Thread.sleep(2500);
+			// converter.printConversionState(system);
+			// Thread.sleep(5000);
+			// converter.printDependencies(system);
+			// Thread.sleep(5000);
+			SystemMSA logic = reconstructLogicArchitecture(realLog, system, getServiceDiscovery(), clientIP);
+			// Thread.sleep(5000);
+			// converter.printConversionState(logic);
+			converter.printDependencies(logic);
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -104,12 +118,77 @@ public class TcpReconstructor {
 		return null;
 	}
 
-	private void reconstructLogicArchitecture(String[] filtedLog, SystemMSA system, String serviceDiscovery) {
-		// TODO Auto-generated method stub
+	private void checkConsistency(SystemMSA system) {
+		// Check if there is some service partially complete
+		Iterator<Service> it = system.getComposedBy().iterator();
+		while (it.hasNext()) {
+			Service service = (Service) it.next();
+			if (service == null) {
+				system.getComposedBy().remove(service);
+			}
+
+		}
 
 	}
 
-	private SystemMSA reconstructPhysicArchitecture(String[] filtedLog, SystemMSA system) {
+	private SystemMSA reconstructLogicArchitecture(String[] filtedLog, SystemMSA system, String serviceDiscovery, String clientIP) throws InterruptedException {
+		// EList<Service> services = system.getComposedBy();
+		// Iterator<Service> it = services.iterator();
+		SystemMSA systemLogic = factory.createSystemMSA();
+		systemLogic.setName(system.getName());
+		converter.cloneNodesMSA(system, systemLogic, serviceDiscovery);
+		// while (it.hasNext()) {
+		// Service service = (Service) it.next();
+		// System.out.println("Linee " + filtedLog.length);
+		Thread.sleep(2000);
+		System.out.println(filtedLog);
+		
+		for (int i = 0; i < filtedLog.length - 1; i++) {
+			String line = filtedLog[i];
+			// Attenzione al controllo sul db, andrebbe filtrato a priori
+
+			if (line != null & !line.contains("HTTP: HTTP/1.1") ) {
+
+				// Delimitatore IP chiamante
+				int indexOfOrigin = line.indexOf(">");
+				// Ip Chiamante
+				String ipSource = extractIp(line.substring(indexOfOrigin - 18, indexOfOrigin - 1));
+				// Ip ricevente
+				String IpDestination = extractIp(line.substring(indexOfOrigin + 1, indexOfOrigin + 15));
+				System.out.println("");
+				System.out.println("Source: " + ipSource + "Destination: " + IpDestination);
+				if (IpDestination.trim().equals(serviceDiscovery.trim())) {
+					System.out.println("Destination is the Service Discovery ");
+					i++;
+					while (i >= filtedLog.length) {
+						i--;
+					}
+
+					String lineCollapsed = filtedLog[i];
+
+					if (lineCollapsed.contains("IP " + serviceDiscovery.trim())) {
+						int indexOfDestinationReal = lineCollapsed.indexOf(">");
+						String IpDestinationReal = extractIp(
+								lineCollapsed.substring(indexOfDestinationReal + 1, indexOfDestinationReal + 15));
+						System.out.println("New Destination: " + IpDestinationReal);
+						// Quindi A > B invece di A > SD > B
+						// Creazione Servizio A
+						// Creazione Interfaccia di B che consumera'
+						// A
+
+						converter.createDependency(ipSource, IpDestinationReal, systemLogic, lineCollapsed);
+					}
+				}
+
+				// Manca assegnamento ed estrazione operazione
+
+			}
+		}
+		return systemLogic;
+
+	}
+
+	private SystemMSA reconstructPhysicArchitecture(String[] filtedLog, SystemMSA system, String clientIP) {
 
 		EList<Service> services = system.getComposedBy();
 		Iterator<Service> it = services.iterator();
@@ -117,18 +196,18 @@ public class TcpReconstructor {
 		while (it.hasNext()) {
 			Service service = (Service) it.next();
 
-
 			for (int i = 0; i < filtedLog.length - 1; i++) {
 				String line = filtedLog[i];
 
 				if (service.getHost() != null) {
-					if (line.contains("IP " + service.getHost())) {
-						
+					if (line.contains("IP " + service.getHost()) && !line.contains(clientIP)) {
+
 						// Il servizio service Consuma un servizio da qualcuno
 						// Usa una interfaccia dell'indirizzo di destra
-						
+
 						int indexOfDestination = line.indexOf(">");
-						String IpDestination = extractIp(line.substring(indexOfDestination + 1, indexOfDestination + 15));
+						String IpDestination = extractIp(
+								line.substring(indexOfDestination + 1, indexOfDestination + 15));
 						// System.out.println("IpDestination: " +
 						// IpDestination);
 						// Chi ho Chiamato?
@@ -138,19 +217,20 @@ public class TcpReconstructor {
 							// Destination espone un interfaccia che sara usata
 							// da service
 							if (!line.contains("HTTP: HTTP/1.1")) {
-								//Check Existence of an Interface, if not Exists it will create a new one, otherwise it will check if
-								//this messagge is a new operation
+								// Check Existence of an Interface, if not
+								// Exists it will create a new one, otherwise it
+								// will check if
+								// this messagge is a new operation
 								converter.checkInterfaceUsed(line, service, destination);
-								//Check if the interface already exist
-								
-								
+								// Check if the interface already exist
+
 							}
-							
+
 						}
 
 						// Manca assegnamento ed estrazione operazione
 
-					} else if (line.contains("> " + service.getHost())) {
+					} else if (line.contains("> " + service.getHost())&& !line.contains(clientIP)) {
 						// System.out.println("Serve:");
 						// Il service viene Chiamato
 						// Espone un interfaccia, usata dall' indirizzo alla sua
@@ -159,7 +239,7 @@ public class TcpReconstructor {
 						// Ip Chiamante
 						String ipSource = extractIp(line.substring(indexOfOrigin - 18, indexOfOrigin - 1));
 						// Chi mi ha Chiamato?
-						// System.out.println("IP Source: ");
+
 						Service source = converter.detectService(services, ipSource);
 						if (source != null) {
 
@@ -170,8 +250,7 @@ public class TcpReconstructor {
 							if (!line.contains("HTTP: HTTP/1.1")) {
 
 								converter.checkInterfaceRequested(line, service, source);
-								
-								
+
 							}
 
 						}
@@ -191,8 +270,13 @@ public class TcpReconstructor {
 	}
 
 	public String extractIp(String ip) {
+		String newIP = null;
+		// if(ip.contains("P")){
+		// newIP= ip.substring(ip.indexOf("P"), ip.lastIndexOf("."));
+		// }else{
+		newIP = ip.substring(0, ip.lastIndexOf("."));
+		// }
 
-		String newIP = ip.substring(0, ip.lastIndexOf("."));
 		return newIP;
 	}
 

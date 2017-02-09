@@ -21,7 +21,7 @@ public class DockerManager {
 			Process p;
 			try {
 				p = Runtime.getRuntime().exec("docker inspect " + service.getContainerID());
-				System.out.println("docker inspect " + service.getContainerID() + " | grep Network");
+//				System.out.println("docker inspect " + service.getContainerID() + " | grep Network");
 				BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
 
 				while ((s = br.readLine()) != null) {
@@ -33,7 +33,7 @@ public class DockerManager {
 					
 
 				}
-				System.out.println(service.getName() + "IP: " + service.getIp() + " network: " + service.getNetwork());
+//				System.out.println(service.getName() + "IP: " + service.getIp() + " network: " + service.getNetwork());
 				p.waitFor();
 				p.destroy();
 			} catch (Exception e) {
@@ -50,12 +50,18 @@ public class DockerManager {
 		Process p;
 		String s = null;
 		try {
-			p = Runtime.getRuntime().exec("docker network " + network);
+//			System.out.println("docker network inspect " + network);
+			p = Runtime.getRuntime().exec("docker network inspect " + network);
 			BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
 
 			while ((s = br.readLine()) != null) {
+//				System.out.println(s);
 				if (s.contains("Gateway")) {
-					clientIP = s.substring(s.indexOf(":"), s.lastIndexOf('"'));
+					clientIP = s.substring(s.indexOf(":")+3, s.lastIndexOf('"'));
+					if (clientIP.contains("\"")) {
+						clientIP = clientIP.substring(clientIP.indexOf("\""));
+					}
+					clientIP = clientIP.trim();
 				}
 
 			}
