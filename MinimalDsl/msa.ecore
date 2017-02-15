@@ -43,8 +43,6 @@
         eOpposite="#//Service/expose"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="usedBy" upperBound="-1"
         eType="#//Service" eOpposite="#//Service/use"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="expose" upperBound="-1"
-        containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="endPoint" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="port" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
   </eClassifiers>
