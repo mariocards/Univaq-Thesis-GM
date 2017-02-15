@@ -6,15 +6,15 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
         defaultValueLiteral=""/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="SystemMSA" eSuperTypes="#//namedElement">
+  <eClassifiers xsi:type="ecore:EClass" name="MSA" eSuperTypes="#//namedElement #//Component">
     <eStructuralFeatures xsi:type="ecore:EReference" name="ComposedBy" lowerBound="1"
         upperBound="-1" eType="#//Service" containment="true" eOpposite="#//Service/Compose"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="DividedIn" upperBound="-1"
         eType="#//Cluster" containment="true" eOpposite="#//Cluster/divide"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Service" eSuperTypes="#//namedElement">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="Compose" eType="#//SystemMSA"
-        eOpposite="#//SystemMSA/ComposedBy"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Service" eSuperTypes="#//namedElement #//Component">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Compose" eType="#//MSA"
+        eOpposite="#//MSA/ComposedBy"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="BelongTo" eType="#//Cluster"
         eOpposite="#//Cluster/Contains"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="owns" upperBound="-1" eType="#//Developer"
@@ -25,11 +25,11 @@
         eOpposite="#//Interface/usedBy"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="host" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Cluster" eSuperTypes="#//namedElement">
+  <eClassifiers xsi:type="ecore:EClass" name="Cluster" eSuperTypes="#//namedElement #//Component">
     <eStructuralFeatures xsi:type="ecore:EReference" name="Contains" upperBound="-1"
         eType="#//Service" eOpposite="#//Service/BelongTo"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="divide" eType="#//SystemMSA"
-        eOpposite="#//SystemMSA/DividedIn"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="divide" eType="#//MSA"
+        eOpposite="#//MSA/DividedIn"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="context" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Developer" eSuperTypes="#//namedElement">
@@ -48,4 +48,5 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="endPoint" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="port" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Component" abstract="true"/>
 </ecore:EPackage>
