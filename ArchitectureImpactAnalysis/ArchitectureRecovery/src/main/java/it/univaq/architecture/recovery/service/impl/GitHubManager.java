@@ -3,89 +3,122 @@ package it.univaq.architecture.recovery.service.impl;
 import java.io.File;
 import java.io.IOException;
 
-import org.eclipse.jgit.api.CloneCommand;
+import org.eclipse.jgit.api.CreateBranchCommand.SetupUpstreamMode;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.api.errors.InvalidRemoteException;
-import org.eclipse.jgit.api.errors.TransportException;
-import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
+import org.eclipse.jgit.api.errors.JGitInternalException;
+import org.eclipse.jgit.internal.storage.file.FileRepository;
+import org.eclipse.jgit.lib.Repository;
+import org.junit.Before;
+import org.junit.Test;
+import org.springframework.stereotype.Service;
 
 import it.univaq.architecture.recovery.service.RepositoryManager;
 
-public class GitHubManager implements RepositoryManager {
+@Service
+public class GitHubManager implements RepositoryManager{
 
-	private String repoGIT;
-	private String path;
-	private String folder;
-	private String username;
-	private String password;
+	private String localPath, remotePath;
+    private Repository localRepo;
+    private Git git;
+    
+    
 
-	public GitHubManager(String repoGIT, String folder, String username, String password) {
+    public GitHubManager() {
 		super();
-		this.repoGIT = repoGIT;
-		this.folder = folder;
-		this.username = username;
-		this.password = password;
+		// TODO Auto-generated constructor stub
 	}
 
-	public String getRepoGIT() {
-		return repoGIT;
+	public GitHubManager(String localPath, String remotePath) {
+		super();
+		this.localPath = localPath;
+		this.remotePath = remotePath;
 	}
 
-	public void setRepoGIT(String repoGIT) {
-		this.repoGIT = repoGIT;
+	@Before
+    public Git init() throws IOException {
+//        localPath = "/home/grankellowsky/Tesi/Codice/prova";
+//        remotePath = "https://github.com/yanglei99/acmeair-nodejs.git";
+        //remotePath = "git@github.com:me/mytestrepo.git";
+        this.localRepo = new FileRepository(this.localPath + "/.git");
+        this.git = new Git(this.localRepo);
+        return this.git;
+    }
+
+    @Test
+    public void testCreate() throws IOException {
+        Repository newRepo = new FileRepository(localPath + ".git");
+        newRepo.create();
+    }
+
+    @Test
+    public void testClone() throws IOException, GitAPIException {
+        Git.cloneRepository().setURI(remotePath)
+                .setDirectory(new File(localPath)).call();
+    }
+
+    @Test
+    public void testAdd() throws IOException, GitAPIException {
+        File myfile = new File(localPath + "/myfile");
+        myfile.createNewFile();
+        git.add().addFilepattern("myfile").call();
+    }
+
+    @Test
+    public void testCommit() throws IOException, GitAPIException,
+            JGitInternalException {
+        git.commit().setMessage("Added myfile").call();
+    }
+
+    @Test
+    public void testPush() throws IOException, JGitInternalException,
+            GitAPIException {
+        git.push().call();
+    }
+
+    @Test
+    public void testTrackMaster() throws IOException, JGitInternalException,
+            GitAPIException {
+        git.branchCreate().setName("master")
+                .setUpstreamMode(SetupUpstreamMode.SET_UPSTREAM)
+                .setStartPoint("origin/master").setForce(true).call();
+    }
+
+    @Test
+    public void testPull() throws IOException, GitAPIException {
+        git.pull().call();
+    }
+
+	public String getLocalPath() {
+		return localPath;
 	}
 
-	public String getPath() {
-		return path;
+	public void setLocalPath(String localPath) {
+		this.localPath = localPath;
 	}
 
-	public void setPath(String path) {
-		this.path = path;
+	public String getRemotePath() {
+		return remotePath;
 	}
 
-	public String getFolder() {
-		return folder;
+	public void setRemotePath(String remotePath) {
+		this.remotePath = remotePath;
 	}
 
-	public void setFolder(String folder) {
-		this.folder = folder;
+	public Repository getLocalRepo() {
+		return localRepo;
 	}
 
-	public String getUsername() {
-		return username;
+	public void setLocalRepo(Repository localRepo) {
+		this.localRepo = localRepo;
 	}
 
-	public void setUsername(String username) {
-		this.username = username;
+	public Git getGit() {
+		return git;
 	}
 
-	public String getPassword() {
-		return password;
+	public void setGit(Git git) {
+		this.git = git;
 	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public void connect() throws IOException {
-
-		
-	}
-	
-	public void cloneRepo() throws IOException{
-		CloneCommand cloneCommand = Git.cloneRepository();
-		cloneCommand.setDirectory(new File(getFolder()));
-		cloneCommand.setNoCheckout(true);
-		cloneCommand.setRemote( getRepoGIT() );
-		cloneCommand.setCredentialsProvider( new UsernamePasswordCredentialsProvider( getUsername(), getPassword()) );
-		try {
-			cloneCommand.call();
-		} catch (GitAPIException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			e.getCause();
-			e.getMessage();
-		}
-	}
+    
 }

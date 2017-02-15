@@ -11,12 +11,23 @@ public class MicroService {
 	private List<Integer> ports;
 
 	private Dockerfile dockerfile;
+	
+	private Dependency dependendyMap;
 
 	private List<ServiceInterface> exposedInterface;
 
 	private List<ServiceInterface> consumingInterface;
 
 	private List<Develeper> devs;
+	
+	private String ip;
+	
+	private String containerID;
+	
+	private String network;
+	
+	private boolean isServiceDiscovery;
+	
 
 	public MicroService() {
 		super();
@@ -71,4 +82,47 @@ public class MicroService {
 		this.name = name;
 	}
 
+	public String getIp() {
+		return ip;
+	}
+
+	public void setIp(String ip) {
+		this.ip = ip;
+	}
+
+	public String getContainerID() {
+		return containerID;
+	}
+
+	public void setContainerID(String containerID) {
+		this.containerID = containerID;
+	}
+
+	public String getNetwork() {
+		return network;
+	}
+
+	public void setNetwork(String network) {
+		this.network = network;
+	}
+
+	public Dependency getDependendyMap() {
+		return dependendyMap;
+	}
+
+	public void setDependendyMap(Dependency dependendyMap) {
+		this.dependendyMap = dependendyMap;
+	}
+
+	public boolean isServiceDiscovery() {
+		return isServiceDiscovery;
+	}
+
+	public void setServiceDiscovery(boolean isServiceDiscovery) {
+		this.isServiceDiscovery = isServiceDiscovery;
+	}
+	
+	
+
+	
 }

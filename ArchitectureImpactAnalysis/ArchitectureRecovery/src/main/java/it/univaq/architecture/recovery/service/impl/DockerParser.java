@@ -12,6 +12,7 @@ import org.apache.log4j.Logger;
 import com.github.dockerjava.core.dockerfile.Dockerfile;
 import com.github.dockerjava.core.dockerfile.DockerfileStatement;
 
+
 import it.univaq.architecture.recovery.model.DockerComposeFile;
 import it.univaq.architecture.recovery.model.MicroService;
 import it.univaq.architecture.recovery.model.MicroserviceArch;
@@ -24,6 +25,7 @@ public class DockerParser implements Parser {
 	private String dockerFile;
 	private String dockerComposeFile;
 	private MicroserviceArch microServicesArch;
+	private int containerCounter;
 
 	public String getBasDirectory() {
 		return basDirectory;
@@ -120,39 +122,41 @@ public class DockerParser implements Parser {
 	public void dockerComposeReader() {
 		try {
 			Dockerfile dockerfile = new Dockerfile(new File(getDockerComposeFile()), new File(getBasDirectory()));
+
 			Iterable<DockerfileStatement> statements = dockerfile.getStatements();
 			List<DockerComposeFile> containerName = new ArrayList<DockerComposeFile>();
 
 			// CHECK FOR CONTAINER NAME
 			for (Iterator<DockerfileStatement> iterator = statements.iterator(); iterator.hasNext();) {
 				DockerfileStatement temp = (DockerfileStatement) iterator.next();
-				// System.out.println("DOCKERITEM: " + temp.toString());
+				
 				// If Contains the word cotainer_name, this represent a
+//				temp.ge
 				// Microservices
 				if (temp.toString().contains("container_name")) {
-					DockerComposeFile container = new DockerComposeFile();
-					container.setContainerName(temp.toString());
-					containerName.add(container);
+					
+					if(temp.toString() != null &&temp.toString() != "" ){
+						DockerComposeFile container = new DockerComposeFile();
+						container.setContainerName(temp.toString());
+						containerName.add(container);	
+					}
+					
 				}
 
 			}
-			// //CHECK ASSOCIATE CONTAINER NAME TO DOCKER FILE
-			int containerCounter = 0;
+			containerCounter = 0;
 			Iterator<DockerComposeFile> containerIterator = containerName.iterator();
 			while (containerIterator.hasNext()) {
 				DockerComposeFile containerTemp = containerIterator.next();
-				// System.out.println("Prendo " +
-				// containerTemp.getContainerName());
+
 				for (Iterator<DockerfileStatement> iterator = statements.iterator(); iterator.hasNext();) {
 					DockerfileStatement temp = (DockerfileStatement) iterator.next();
-					// System.out.println(containerTemp.getContainerName() + "
-					// Compared to " + temp.toString());
+
 					if (containerTemp.getContainerName().equals(temp.toString())) {
 						containerCounter = 1;
 						while (iterator.hasNext()) {
 							DockerfileStatement temp2 = iterator.next();
-							// System.out.println("New Item: " +
-							// temp2.toString());
+
 							if (!temp2.toString().contains("container_name")) {
 								if (temp2.toString().contains("build")) {
 									containerTemp.setBuild(temp2.toString());
@@ -167,6 +171,7 @@ public class DockerParser implements Parser {
 
 				}
 			}
+			// Start Parsing
 			parseDockerCompose(containerName);
 		} catch (IOException e) {
 			// TODO: handle exception
@@ -206,6 +211,9 @@ public class DockerParser implements Parser {
 				dockerFile = new File(this.basDirectory + "/" + dockerFileName);
 				dockerInst = new Dockerfile(dockerFile, new File(this.basDirectory + "/"));
 				microservice.setDockerfile(dockerInst);
+			}else{
+//				Per i Database che non hai dockerfile bisogna inventarsi qualcosa
+//				microservice.setDockerfile(new Dockerfile(new File(""),new File(this.basDirectory + "/")));
 			}
 
 			microServices.add(microservice);
