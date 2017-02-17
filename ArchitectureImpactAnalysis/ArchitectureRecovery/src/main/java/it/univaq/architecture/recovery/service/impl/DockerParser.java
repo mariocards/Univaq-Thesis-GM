@@ -14,7 +14,7 @@ import com.github.dockerjava.core.dockerfile.DockerfileStatement;
 
 
 import it.univaq.architecture.recovery.model.DockerComposeFile;
-import it.univaq.architecture.recovery.model.MicroService;
+import it.univaq.architecture.recovery.model.PseudoMicroService;
 import it.univaq.architecture.recovery.model.MicroserviceArch;
 import it.univaq.architecture.recovery.service.Parser;
 
@@ -180,7 +180,7 @@ public class DockerParser implements Parser {
 
 	private void parseDockerCompose(List<DockerComposeFile> containerName) {
 
-		List<MicroService> microServices = new ArrayList<MicroService>();
+		List<PseudoMicroService> microServices = new ArrayList<PseudoMicroService>();
 		Iterator<DockerComposeFile> iterator = containerName.iterator();
 		while (iterator.hasNext()) {
 
@@ -191,7 +191,7 @@ public class DockerParser implements Parser {
 			File dockerFile = null;
 			File baseDirectory = null;
 			Dockerfile dockerInst = null;
-			MicroService microservice = new MicroService();
+			PseudoMicroService microservice = new PseudoMicroService();
 
 			microservice.setName(ContainerName);
 			if (dockercompose.getBuild() != null) {
@@ -224,10 +224,10 @@ public class DockerParser implements Parser {
 
 	public void dockerFilereader() {
 
-		List<MicroService> microservices = getMicroServicesArch().getServices();
-		Iterator<MicroService> it = microservices.iterator();
+		List<PseudoMicroService> microservices = getMicroServicesArch().getServices();
+		Iterator<PseudoMicroService> it = microservices.iterator();
 		while (it.hasNext()) {
-			MicroService microService = (MicroService) it.next();
+			PseudoMicroService microService = (PseudoMicroService) it.next();
 			try {
 				Dockerfile dockerfile = microService.getDockerfile();
 				Iterable<DockerfileStatement> statements = dockerfile.getStatements();

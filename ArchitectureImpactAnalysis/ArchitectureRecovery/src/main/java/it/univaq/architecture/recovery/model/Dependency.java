@@ -5,29 +5,29 @@ import java.util.List;
 public class Dependency {
 
 	//Le Sue Dipendenze
-	List<MicroService> dependOn;
+	List<PseudoMicroService> dependOn;
 	//Chi dipende da lui
-	List<MicroService> dependent;
+	List<PseudoMicroService> dependent;
 	
 	
-	public List<MicroService> getDependOn() {
+	public List<PseudoMicroService> getDependOn() {
 		return dependOn;
 	}
-	public void setDependOn(List<MicroService> dependOn) {
+	public void setDependOn(List<PseudoMicroService> dependOn) {
 		this.dependOn = dependOn;
 	}
-	public List<MicroService> getDependent() {
+	public List<PseudoMicroService> getDependent() {
 		return dependent;
 	}
-	public void setDependent(List<MicroService> dependent) {
+	public void setDependent(List<PseudoMicroService> dependent) {
 		this.dependent = dependent;
 	}
 	
-	public void addDependency(MicroService dependOn){
+	public void addDependency(PseudoMicroService dependOn){
 		this.dependOn.add(dependOn);
 	}
 	
-	public void addDependent(MicroService dependent){
+	public void addDependent(PseudoMicroService dependent){
 		this.dependent.add(dependent);
 	}
 	

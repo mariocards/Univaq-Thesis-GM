@@ -7,7 +7,7 @@ public class MicroserviceArch {
 
 	private String name;
 
-	private List<MicroService> services;
+	private List<PseudoMicroService> services;
 
 	private String clientIp;
 	
@@ -26,22 +26,22 @@ public class MicroserviceArch {
 		this.name = name;
 	}
 
-	public List<MicroService> getServices() {
+	public List<PseudoMicroService> getServices() {
 		return services;
 	}
 
-	public void setServices(List<MicroService> services) {
+	public void setServices(List<PseudoMicroService> services) {
 		this.services = services;
 	}
 
-	public void addService(MicroService service) {
+	public void addService(PseudoMicroService service) {
 		this.services.add(service);
 	}
 
 	public String toString() {
-		Iterator<MicroService> it = this.services.iterator();
+		Iterator<PseudoMicroService> it = this.services.iterator();
 		while (it.hasNext()) {
-			MicroService microService = (MicroService) it.next();
+			PseudoMicroService microService = (PseudoMicroService) it.next();
 			System.out.println(microService.getName());
 			System.out.println(microService.getDockerfile());
 			if (microService.getPorts() != null)
@@ -51,11 +51,11 @@ public class MicroserviceArch {
 		return "";
 	}
 
-	public MicroService getServiceByIP(String ip) {
+	public PseudoMicroService getServiceByIP(String ip) {
 
-		Iterator<MicroService> it = this.services.iterator();
+		Iterator<PseudoMicroService> it = this.services.iterator();
 		while (it.hasNext()) {
-			MicroService temp = (MicroService) it.next();
+			PseudoMicroService temp = (PseudoMicroService) it.next();
 			if (temp.getIp().contains(ip)) {
 				return temp;
 			}
@@ -64,11 +64,11 @@ public class MicroserviceArch {
 		return null;
 	}
 
-	public MicroService getServiceByContainerID(String containerID) {
+	public PseudoMicroService getServiceByContainerID(String containerID) {
 
-		Iterator<MicroService> it = this.services.iterator();
+		Iterator<PseudoMicroService> it = this.services.iterator();
 		while (it.hasNext()) {
-			MicroService temp = (MicroService) it.next();
+			PseudoMicroService temp = (PseudoMicroService) it.next();
 			if (temp.getContainerID().contains(containerID)) {
 				return temp;
 			}
@@ -77,11 +77,11 @@ public class MicroserviceArch {
 		return null;
 	}
 
-	public MicroService getServiceByName(String name) {
+	public PseudoMicroService getServiceByName(String name) {
 
-		Iterator<MicroService> it = this.services.iterator();
+		Iterator<PseudoMicroService> it = this.services.iterator();
 		while (it.hasNext()) {
-			MicroService temp = (MicroService) it.next();
+			PseudoMicroService temp = (PseudoMicroService) it.next();
 			if (temp.getContainerID().contains(name)) {
 				return temp;
 			}

@@ -8,15 +8,16 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import it.univaq.architecture.recovery.model.MicroService;
+import it.univaq.architecture.recovery.model.PseudoMicroService;
 
 public class DockerManager {
 
-	public List<MicroService> getNetwork(List<MicroService> services) {
-		List<MicroService> richServices = services;
-		Iterator<MicroService> it = richServices.iterator();
+	public List<PseudoMicroService> getNetwork(List<PseudoMicroService> services) {
+		List<PseudoMicroService> richServices = services;
+		Iterator<PseudoMicroService> it = richServices.iterator();
+		
 		while (it.hasNext()) {
-			MicroService service = (MicroService) it.next();
+			PseudoMicroService service = (PseudoMicroService) it.next();
 			String s = null;
 			Process p;
 			try {
@@ -73,12 +74,12 @@ public class DockerManager {
 		return clientIP;
 	}
 
-	public List<MicroService> getContainerId(List<MicroService> services) {
+	public List<PseudoMicroService> getContainerId(List<PseudoMicroService> services) {
 		// String result = this.reader("docker ps");
-		List<MicroService> richServices = services;
-		Iterator<MicroService> it = richServices.iterator();
+		List<PseudoMicroService> richServices = services;
+		Iterator<PseudoMicroService> it = richServices.iterator();
 		while (it.hasNext()) {
-			MicroService service = (MicroService) it.next();
+			PseudoMicroService service = (PseudoMicroService) it.next();
 			String s = null;
 			Process p;
 			try {
@@ -103,13 +104,13 @@ public class DockerManager {
 		return richServices;
 
 	}
-	public List<String> checkIfContainerHasTheSameNetwork(List<MicroService> containers){
+	public List<String> checkIfContainerHasTheSameNetwork(List<PseudoMicroService> containers){
 		List<String> networks = new ArrayList<String>();
 		
 		
-		Iterator<MicroService> it = containers.iterator();
+		Iterator<PseudoMicroService> it = containers.iterator();
 		while (it.hasNext()) {
-			MicroService microService = (MicroService) it.next();
+			PseudoMicroService microService = (PseudoMicroService) it.next();
 			if(!networks.contains(microService.getNetwork())){
 				networks.add(microService.getNetwork());
 			}

@@ -12,10 +12,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
+import MicroservicesArchitecture.Product;
 import it.univaq.architecture.recovery.model.MicroserviceArch;
+import it.univaq.architecture.recovery.service.impl.Converter;
 import it.univaq.architecture.recovery.service.impl.DockerManager;
 import it.univaq.architecture.recovery.service.impl.DockerParser;
-import it.univaq.architecture.recovery.service.impl.TcpReconstructor;
+import it.univaq.architecture.recovery.service.impl.Extraction;
+import it.univaq.architecture.recovery.service.impl.MSALoaderImpl;
 
 @SpringBootApplication
 @ComponentScan(basePackages = { "it.univaq.architecture.recovery.service.impl.*" })
@@ -24,47 +27,44 @@ import it.univaq.architecture.recovery.service.impl.TcpReconstructor;
 public class ArchitectureRecoveryApplication {
 
 	final static Logger logger = Logger.getLogger(ArchitectureRecoveryApplication.class);
+	public static MSALoaderImpl factory = new MSALoaderImpl();
+	public Extraction extractor = new Extraction();
 
-//	@Autowired
-//	private GitHubManager repoManager;
-
-	
 	public static void main(String[] args)
 			throws IOException, InvalidRemoteException, TransportException, GitAPIException, InterruptedException {
 		SpringApplication.run(ArchitectureRecoveryApplication.class, args);
-		
-//		this.repoManager.setLocalPath("/home/grankellowsky/Tesi/Codice/prova2");
-//		this.repoManager.setRemotePath("https://github.com/yanglei99/acmeair-nodejs.git");
-//		 System.out.println("INSTANZIAZIONE MANAGER GITHUB");
-//		 TestJGit test = new
-//		 TestJGit("/home/grankellowsky/Tesi/Codice/prova2","https://github.com/yanglei99/acmeair-nodejs.git");
-//		 test.testClone();
-//		 File localPath = new File(test.getLocalPath());
+
+		// this.repoManager.setLocalPath("/home/grankellowsky/Tesi/Codice/prova2");
+		// this.repoManager.setRemotePath("https://github.com/yanglei99/acmeair-nodejs.git");
+		// System.out.println("INSTANZIAZIONE MANAGER GITHUB");
+		// GitHubManager test = new
+		// GitHubManager("/home/grankellowsky/Tesi/Codice/prova2","https://github.com/yanglei99/acmeair-nodejs.git");
+		// test.testClone();
+		// File localPath = new File(test.getLocalPath());
 		logger.info("microServicesArch Element Created");
 		MicroserviceArch microServicesArch = new MicroserviceArch();
 		logger.info("DockerParser Started");
 		DockerParser dockerParser = new DockerParser(microServicesArch);
-		// dockerParser.setBasDirectory("/home/grankellowsky/Tesi/Codice/prova2");
 		dockerParser.setBasDirectory("/home/grankellowsky/Tesi/Codice/dockerProject/acmeair-nodejs");
 		dockerParser.find();
-		
-		
-		
 		logger.info("=========================");
 		logger.info("Docker Reader Starting:");
 		dockerParser.dockerFilereader();
-		
+
 		DockerManager manager = new DockerManager();
 		manager.getContainerId(microServicesArch.getServices());
 		manager.getNetwork(microServicesArch.getServices());
 		microServicesArch.setNetworkName(manager.checkIfContainerHasTheSameNetwork(microServicesArch.getServices()));
-		
 		microServicesArch.setClientIp(manager.getClientIP(microServicesArch.getNetworkName().get(0)));
-//		Thread.sleep(1000);
-		
-		TcpReconstructor reconstructore = new TcpReconstructor();
-		
-		reconstructore.valutateResult(microServicesArch, microServicesArch.getClientIp());
-
+		// Da Gli pseudo Microservice Ottenuti da Docker, Creo un istanza di
+		// Product
+		// Questo sarà il primo passo iterativo
+		Product product = Converter.createProduct(microServicesArch.getServices(), microServicesArch.getClientIp());
+		Extraction extract = new Extraction();
+		// extract.dynamicAnalysis(product, microServicesArch.getClientIp());
+		// extract.showDependency(product);
+		extract.dynamicAnalysisWithServiceDiscovery(product, microServicesArch.getClientIp(), "172.18.0.11");
+		extract.showDependency(product);
+		factory.saveModel(product);
 	}
 }
