@@ -30,7 +30,7 @@
         eOpposite="#//Team/workOn"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="isInfrastructural" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="require" upperBound="-1"
-        eType="#//Interface" eOpposite="#//Interface/requiredBy"/>
+        eType="#//Interface" containment="true" eOpposite="#//Interface/requiredBy"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Cluster" eSuperTypes="#//Element">
     <eStructuralFeatures xsi:type="ecore:EReference" name="contains" upperBound="-1"
@@ -50,8 +50,8 @@
         eOpposite="#//MicroService/expose"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="endPoint" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="port" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="requiredBy" upperBound="-1"
-        eType="#//MicroService" eOpposite="#//MicroService/require"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="requiredBy" eType="#//MicroService"
+        eOpposite="#//MicroService/require"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Link" eSuperTypes="#//Element">
     <eStructuralFeatures xsi:type="ecore:EReference" name="source" eType="#//Interface"/>
