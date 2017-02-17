@@ -49,7 +49,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="port" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Link" eSuperTypes="#//Element">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="source" eType="#//MicroService"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="source" eType="#//Interface"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="target" eType="#//Interface"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="Dependency" eType="#//Product"
         eOpposite="#//Product/Links"/>
