@@ -3,6 +3,7 @@ package it.univaq.architecture.recovery.granchelli;
 import java.io.IOException;
 
 import org.apache.log4j.Logger;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.InvalidRemoteException;
 import org.eclipse.jgit.api.errors.TransportException;
@@ -12,12 +13,14 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
+import MicroservicesArchitecture.Developer;
 import MicroservicesArchitecture.Product;
 import it.univaq.architecture.recovery.model.MicroserviceArch;
 import it.univaq.architecture.recovery.service.impl.Converter;
 import it.univaq.architecture.recovery.service.impl.DockerManager;
 import it.univaq.architecture.recovery.service.impl.DockerParser;
 import it.univaq.architecture.recovery.service.impl.Extraction;
+import it.univaq.architecture.recovery.service.impl.GitHubManager;
 import it.univaq.architecture.recovery.service.impl.MSALoaderImpl;
 
 @SpringBootApplication
@@ -37,10 +40,12 @@ public class ArchitectureRecoveryApplication {
 		// this.repoManager.setLocalPath("/home/grankellowsky/Tesi/Codice/prova2");
 		// this.repoManager.setRemotePath("https://github.com/yanglei99/acmeair-nodejs.git");
 		// System.out.println("INSTANZIAZIONE MANAGER GITHUB");
-		// GitHubManager test = new
-		// GitHubManager("/home/grankellowsky/Tesi/Codice/prova2","https://github.com/yanglei99/acmeair-nodejs.git");
-		// test.testClone();
+		GitHubManager test = new GitHubManager("/home/grankellowsky/Tesi/Codice/prova3",
+				"https://github.com/yanglei99/acmeair-nodejs.git");
+		test.init();
+//		test.testClone();
 		// File localPath = new File(test.getLocalPath());
+		EList<Developer> devs = test.getCommits();
 		logger.info("microServicesArch Element Created");
 		MicroserviceArch microServicesArch = new MicroserviceArch();
 		logger.info("DockerParser Started");
@@ -60,6 +65,7 @@ public class ArchitectureRecoveryApplication {
 		// Product
 		// Questo sarà il primo passo iterativo
 		Product product = Converter.createProduct(microServicesArch.getServices(), microServicesArch.getClientIp());
+		product.getDevelopers().addAll(devs);
 		Extraction extract = new Extraction();
 		// extract.dynamicAnalysis(product, microServicesArch.getClientIp());
 		// extract.showDependency(product);
