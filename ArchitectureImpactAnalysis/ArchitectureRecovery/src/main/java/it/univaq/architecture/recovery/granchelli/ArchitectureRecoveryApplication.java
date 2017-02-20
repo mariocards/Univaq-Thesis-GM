@@ -1,6 +1,7 @@
 package it.univaq.architecture.recovery.granchelli;
 
 import java.io.IOException;
+import java.util.Scanner;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
@@ -67,10 +68,70 @@ public class ArchitectureRecoveryApplication {
 		Product product = Converter.createProduct(microServicesArch.getServices(), microServicesArch.getClientIp());
 		product.getDevelopers().addAll(devs);
 		Extraction extract = new Extraction();
-		// extract.dynamicAnalysis(product, microServicesArch.getClientIp());
-		// extract.showDependency(product);
-		extract.dynamicAnalysisWithServiceDiscovery(product, microServicesArch.getClientIp(), "172.18.0.11");
-		extract.showDependency(product);
-		factory.saveModel(product);
+		
+		extract.dynamicAnalysis(product, microServicesArch.getClientIp());
+//		extract.showDependency(product);
+		//Where to Save and Retrive model
+		String pathToSaveModel = "/home/grankellowsky/Tesi/Codice/workspaces/runtime-EclipseApplication/it.univaq.recovery.diagram";
+		String nameOfTheModel = "/acmerair.microservicesarchitecture";
+		//Save Architectural Model
+//		
+		factory.saveModel(product, pathToSaveModel, nameOfTheModel);
+		//Messages
+		System.out.println("The model as been saved in the runtime Eclipse project ");
+		System.out.println("Model saved in Path: " + pathToSaveModel);
+		System.out.println("Model saved with Name: " + nameOfTheModel);
+		System.out.println();
+		System.out.println("Go to the Eclipse-RunTime Project and choose the Service Discovery");
+		promptEnterKey();
+		//Get the new Model
+
+		Thread.sleep(1500);
+		Product filteredProduct = factory.getModel(pathToSaveModel, nameOfTheModel);
+		String serviceDiscovery = factory.getServiceDiscovery(filteredProduct);
+		while(CheckServiceDiscovery(serviceDiscovery)){
+			promptEnterKey();
+			filteredProduct = factory.getModel(pathToSaveModel, nameOfTheModel);
+			serviceDiscovery = factory.getServiceDiscovery(product);
+			
+		}
+		System.out.println("I got this ServiceDiscory: " + serviceDiscovery);
+		extract.dynamicAnalysisWithServiceDiscovery(filteredProduct, microServicesArch.getClientIp(), serviceDiscovery);
+//		extract.showDependency(filteredProduct);
+		factory.saveModel(filteredProduct, pathToSaveModel, nameOfTheModel);
+		System.out.println("Your Model is now update. Check the Eclipse-RunTime");
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+	private static boolean CheckServiceDiscovery(String serviceDiscovery) {
+		if (serviceDiscovery.equals("NoServiceDiscovery")) {
+			System.out.println("You Didn't Selected the Service Discovery, please, in order to filter this infrastructural node, go back to elcipse runtime, select and save.");
+			return true;
+		}
+		return false;
+	}
+
+	private static void promptEnterKey() {
+		System.out.println("Press \"ENTER\" if you finished your modifications.(Don't Forget to Save and Close)");
+		   Scanner scanner = new Scanner(System.in);
+		   scanner.nextLine();
+		
 	}
 }
+

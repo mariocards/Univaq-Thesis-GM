@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.util.Arrays;
 import java.util.Iterator;
 
+import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 import org.springframework.util.StringUtils;
 
@@ -34,6 +35,21 @@ public class Extraction {
 		// Ora ho product che ha tutti i servizi
 
 		readLog(prd, filteredLog, ClientIP);
+		cleanDependency(prd);
+
+	}
+
+	private void cleanDependency(Product prd) {
+		Iterator<Link> links = prd.getLinks().iterator();
+		EList<Link> cleanedList = new BasicEList<Link>();
+		while (links.hasNext()) {
+			Link link = (Link) links.next();
+			if (!cleanedList.contains(link)) {
+				cleanedList.add(link);
+			}
+		}
+		prd.getLinks().clear();
+		prd.getLinks().addAll(cleanedList);
 
 	}
 
@@ -44,8 +60,84 @@ public class Extraction {
 		// Applico un filtro al log per eliminare le righe non necessarie
 		String[] filteredLog = filterLog(log);
 		// Ora ho product che ha tutti i servizi
-		MicroService serviceDiscovery = getMicroservice(product, ServiceDiscovery);
+		MicroService serviceDiscovery = getMicroservice(prd, ServiceDiscovery);
+		cleanInterfaceAndLinks(prd);
 		readLogWithServiceDiscovery(prd, filteredLog, ClientIP, serviceDiscovery);
+		cleanDependency(prd);
+		cleanDatabase(prd);
+		MicroService client = getMicroservice(prd, ClientIP);
+		MicroService sd = getMicroservice(prd, ServiceDiscovery);
+		eraseDependency(client, prd);
+		eraseDependency(sd, prd);
+		prd.getComposedBy().remove(client);
+		prd.getComposedBy().remove(sd);
+//		collapseArrows();
+
+	}
+
+	private void cleanInterfaceAndLinks(Product prd) {
+		// TODO Auto-generated method stub
+		prd.getLinks().clear();
+		Iterator<MicroService> it = prd.getComposedBy().iterator();
+		while (it.hasNext()) {
+			MicroService microService = (MicroService) it.next();
+			microService.getExpose().clear();
+			microService.getRequire().clear();
+		}
+	}
+
+	private void cleanDatabase(Product prd) {
+		EList<MicroService> brandNewMs = new BasicEList<MicroService>();
+		Iterator<MicroService> it = prd.getComposedBy().iterator();
+		while (it.hasNext()) {
+			MicroService microService = (MicroService) it.next();
+			if (microService.getName().contains("_db")) {
+				eraseDependency(microService, prd);
+//				prd.getComposedBy().remove(microService);
+			}else{
+				brandNewMs.add(microService);
+			}
+		}
+		prd.getComposedBy().clear();
+		prd.getComposedBy().addAll(brandNewMs);
+
+	}
+
+	private void eraseDependency(MicroService microService, Product prd) {
+		EList<Link> links = prd.getLinks();
+		EList<Link> brandNewLinks = new BasicEList<Link>(); 
+		EList<Interface> exposed = microService.getExpose();
+
+		// Check for exposed
+		Iterator<Interface> itInterface = exposed.iterator();
+		while (itInterface.hasNext()) {
+			Interface interface1 = (Interface) itInterface.next();
+			
+			Iterator<Link> it = links.iterator();
+			
+			while (it.hasNext()) {
+				Link link = (Link) it.next();
+				if (link.getTarget().equals(interface1)) {
+					brandNewLinks.add(link);
+				}
+			}
+		}
+		
+		EList<Interface> required = microService.getRequire();
+		itInterface = required.iterator();
+		while (itInterface.hasNext()) {
+			Interface interface1 = (Interface) itInterface.next();
+			
+			Iterator<Link> it = links.iterator();
+			
+			while (it.hasNext()) {
+				Link link = (Link) it.next();
+				if (link.getSource().equals(interface1)) {
+					brandNewLinks.add(link);
+				}
+			}
+		}
+		prd.getLinks().removeAll(brandNewLinks);
 		
 
 	}
@@ -98,12 +190,12 @@ public class Extraction {
 				System.out.println("Errore - targetService Null");
 			}
 			// So now Sender Dependes on Target
-			if (!checkLinkExistence(product, senderService, targetService)) {
+//			if (!checkLinkExistence(product, senderService, targetService)) {
 				// Non esiste un Link con nessuna interfaccia di Sender Target
 				Link dependency = createLink(senderService, targetService, row);
 				dependency.setDependency(product);
 
-			}
+//			}
 
 		}
 
@@ -161,37 +253,35 @@ public class Extraction {
 	private Link createLink(MicroService senderService, MicroService targetService, String row) {
 		// Check if exist a Link Betweend these two service
 		Link senderToReceive = factory.createLink();
-
-		// Estrarre Interface
-
 		// Creo Interfaccia Fittizia di Chiamata
 		// per Sender e Unisco Microservice e Interfaccia
-		Interface senderInterface = factory.createInterface();
-		senderInterface.setEndPoint("Required " + targetService.getHost());
-		senderInterface.setName("Service Required " + targetService.getName());
-		senderInterface.setRequiredBy(senderService);
-		// Add to Source the required Interface
-		senderService.getRequire().add(senderInterface);
-
+		Interface senderInterface = getRequiredInterface(senderService, targetService, row);
 		// Creo Interfaccia Reale
 		// per Target e Unisco Microservice e Interfaccia
-		Interface targetInterface = factory.createInterface();
-		targetInterface.setEndPoint(extractEndPointTarget(row));
-		targetInterface.setName("Service RequestBy " + senderService.getName());
-		targetInterface.setExposedBy(targetService);
-		// Add to taget the exposed Interface
-		targetService.getExpose().add(targetInterface);
-
-		// Check If Interface already Exist
-
-		// If not exist add to Service Target
-
-		// Create
-		senderToReceive.setName("Link From:" + senderService.getName() + " To: " + targetService.getName());
-		;
+		Interface targetInterface = getExposedInterface(senderService, targetService, row);
+		// Istanzio il Link
+		senderToReceive.setName(senderService.getName() + " REQUIRE " + targetService.getName());
 		senderToReceive.setSource(senderInterface);
 		senderToReceive.setTarget(targetInterface);
 		return senderToReceive;
+	}
+
+	private Interface getExposedInterface(MicroService senderService, MicroService targetService, String row) {
+		Interface targetInterface = null;
+
+		if (checkIfExposedInterfaceExist(targetService, extractEndPointTarget(row))) {
+			targetInterface = getExposedInterfaceByEndPoint(targetService, extractEndPointTarget(row));
+		} else {
+			targetInterface = factory.createInterface();
+		}
+
+		targetInterface.setEndPoint(extractEndPointTarget(row));
+		targetInterface.setName("Request By " + senderService.getName());
+
+		targetInterface.setExposedBy(targetService);
+		// Add to taget the exposed Interface
+		targetService.getExpose().add(targetInterface);
+		return targetInterface;
 	}
 
 	private String extractNameTarget(String row) {
@@ -268,7 +358,7 @@ public class Extraction {
 	}
 
 	public File getLog() {
-		File file = new File("/home/grankellowsky/Tesi/Codice/logging/tcptrack/log_17feb.txt");
+		File file = new File("/home/grankellowsky/Tesi/Codice/logging/tcptrack/log_20feb.txt");
 		return file;
 	}
 
@@ -390,5 +480,64 @@ public class Extraction {
 			return line;
 		}
 
+	}
+
+	private Interface getExposedInterfaceByEndPoint(MicroService targetService, String extractEndPointTarget) {
+		Iterator<Interface> it = targetService.getExpose().iterator();
+		while (it.hasNext()) {
+			Interface interface1 = (Interface) it.next();
+			if (interface1.getEndPoint().equals(extractEndPointTarget)) {
+				return interface1;
+			}
+		}
+		return null;
+	}
+
+	private boolean checkIfExposedInterfaceExist(MicroService targetService, String targetInterface) {
+		Iterator<Interface> it = targetService.getExpose().iterator();
+		while (it.hasNext()) {
+			Interface interface1 = (Interface) it.next();
+			if (interface1.getEndPoint().equals(targetInterface)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private boolean checkIfRequiredInterfaceExist(MicroService senderService, String endPoint) {
+		Iterator<Interface> it = senderService.getExpose().iterator();
+		while (it.hasNext()) {
+			Interface interface1 = (Interface) it.next();
+			if (interface1.getEndPoint().equals(endPoint)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private Interface getRequiredInterfaceByEndPoint(MicroService senderService, String endPoint) {
+		Iterator<Interface> it = senderService.getExpose().iterator();
+		while (it.hasNext()) {
+			Interface interface1 = (Interface) it.next();
+			if (interface1.getEndPoint().equals(endPoint)) {
+				return interface1;
+			}
+		}
+		return null;
+	}
+
+	private Interface getRequiredInterface(MicroService senderService, MicroService targetService, String row) {
+		Interface senderInterface = null;
+		if (checkIfRequiredInterfaceExist(senderService, "REQUIRE: " + targetService.getHost())) {
+			senderInterface = getRequiredInterfaceByEndPoint(senderService, "REQUIRE: " + targetService.getHost());
+		} else {
+			senderInterface = factory.createInterface();
+		}
+		senderInterface.setEndPoint("REQUIRE: " + targetService.getHost());
+		senderInterface.setName("Require: " + targetService.getName());
+		senderInterface.setRequiredBy(senderService);
+		// Add to Source the required Interface
+		senderService.getRequire().add(senderInterface);
+		return senderInterface;
 	}
 }
