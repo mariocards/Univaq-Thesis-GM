@@ -19,11 +19,12 @@ public class Extraction {
 
 	public Converter converter;
 	public static MSALoaderImpl factory;
-
-	public Extraction() {
+	public String logFileName;
+	public Extraction(String logFileName) {
 		super();
 		converter = new Converter();
 		factory = new MSALoaderImpl();
+		this.logFileName = logFileName;
 	}
 
 	public void dynamicAnalysis(Product product, String ClientIP) {
@@ -68,11 +69,33 @@ public class Extraction {
 		MicroService client = getMicroservice(prd, ClientIP);
 		MicroService sd = getMicroservice(prd, ServiceDiscovery);
 		eraseDependency(client, prd);
+		cleanRequestedUseless(client.getName(), prd);
+		cleanRequestedUseless(sd.getName(), prd);
 		eraseDependency(sd, prd);
 		prd.getComposedBy().remove(client);
 		prd.getComposedBy().remove(sd);
-//		collapseArrows();
+		// collapseArrows();
 
+	}
+
+	private void cleanRequestedUseless(String name, Product prd) {
+		// TODO Auto-generated method stub
+		Iterator<MicroService> it = prd.getComposedBy().iterator();
+		
+		while (it.hasNext()) {
+			MicroService microService = (MicroService) it.next();
+			Iterator<Interface> it2 = microService.getRequire().iterator();
+			EList<Interface> list = new BasicEList<Interface>();
+			while (it2.hasNext()) {
+				Interface interface1 = (Interface) it2.next();
+				if (!interface1.getEndPoint().equals("/"+name+"/")) {
+					list.add(interface1);
+				}
+			}
+			microService.getRequire().clear();
+			microService.getRequire().addAll(list);
+		}
+		
 	}
 
 	private void cleanInterfaceAndLinks(Product prd) {
@@ -93,8 +116,8 @@ public class Extraction {
 			MicroService microService = (MicroService) it.next();
 			if (microService.getName().contains("_db")) {
 				eraseDependency(microService, prd);
-//				prd.getComposedBy().remove(microService);
-			}else{
+				// prd.getComposedBy().remove(microService);
+			} else {
 				brandNewMs.add(microService);
 			}
 		}
@@ -105,16 +128,16 @@ public class Extraction {
 
 	private void eraseDependency(MicroService microService, Product prd) {
 		EList<Link> links = prd.getLinks();
-		EList<Link> brandNewLinks = new BasicEList<Link>(); 
+		EList<Link> brandNewLinks = new BasicEList<Link>();
 		EList<Interface> exposed = microService.getExpose();
 
 		// Check for exposed
 		Iterator<Interface> itInterface = exposed.iterator();
 		while (itInterface.hasNext()) {
 			Interface interface1 = (Interface) itInterface.next();
-			
+
 			Iterator<Link> it = links.iterator();
-			
+
 			while (it.hasNext()) {
 				Link link = (Link) it.next();
 				if (link.getTarget().equals(interface1)) {
@@ -122,14 +145,14 @@ public class Extraction {
 				}
 			}
 		}
-		
+
 		EList<Interface> required = microService.getRequire();
 		itInterface = required.iterator();
 		while (itInterface.hasNext()) {
 			Interface interface1 = (Interface) itInterface.next();
-			
+
 			Iterator<Link> it = links.iterator();
-			
+
 			while (it.hasNext()) {
 				Link link = (Link) it.next();
 				if (link.getSource().equals(interface1)) {
@@ -138,7 +161,6 @@ public class Extraction {
 			}
 		}
 		prd.getLinks().removeAll(brandNewLinks);
-		
 
 	}
 
@@ -190,12 +212,12 @@ public class Extraction {
 				System.out.println("Errore - targetService Null");
 			}
 			// So now Sender Dependes on Target
-//			if (!checkLinkExistence(product, senderService, targetService)) {
-				// Non esiste un Link con nessuna interfaccia di Sender Target
-				Link dependency = createLink(senderService, targetService, row);
-				dependency.setDependency(product);
+			// if (!checkLinkExistence(product, senderService, targetService)) {
+			// Non esiste un Link con nessuna interfaccia di Sender Target
+			Link dependency = createLink(senderService, targetService, row);
+			dependency.setDependency(product);
 
-//			}
+			// }
 
 		}
 
@@ -260,7 +282,7 @@ public class Extraction {
 		// per Target e Unisco Microservice e Interfaccia
 		Interface targetInterface = getExposedInterface(senderService, targetService, row);
 		// Istanzio il Link
-		senderToReceive.setName(senderService.getName() + " REQUIRE " + targetService.getName());
+		senderToReceive.setName("From: "+senderService.getName() + " To: " + targetService.getName());
 		senderToReceive.setSource(senderInterface);
 		senderToReceive.setTarget(targetInterface);
 		return senderToReceive;
@@ -276,7 +298,7 @@ public class Extraction {
 		}
 
 		targetInterface.setEndPoint(extractEndPointTarget(row));
-		targetInterface.setName("Request By " + senderService.getName());
+		targetInterface.setName("Request From: " + senderService.getName());
 
 		targetInterface.setExposedBy(targetService);
 		// Add to taget the exposed Interface
@@ -292,17 +314,16 @@ public class Extraction {
 	}
 
 	private String extractEndPointTarget(String row) {
-		System.out.println("ROW: " + row);
+
 		String EndPoint = row.substring(row.indexOf("HTTP:") + 5, row.indexOf("HTTP/1.1")).trim();
-		System.out.println("Prima: " + EndPoint);
+
 		if (!EndPoint.isEmpty() || !EndPoint.equals("")) {
-			System.out.println("Indice Slash" + EndPoint.indexOf("/"));
+
 			EndPoint = EndPoint.substring(EndPoint.indexOf("/"));
 
-			System.out.println(EndPoint);
 			return getEndPoint(EndPoint);
 		} else {
-			return "200 Ok";
+			return "Ack";
 		}
 
 	}
@@ -358,7 +379,7 @@ public class Extraction {
 	}
 
 	public File getLog() {
-		File file = new File("/home/grankellowsky/Tesi/Codice/logging/tcptrack/log_20feb.txt");
+		File file = new File(this.logFileName);
 		return file;
 	}
 
@@ -415,7 +436,7 @@ public class Extraction {
 		int occurence = 0;
 		int index = 0;
 		String endPoint = null;
-		System.out.println("Arrivata la Stringa :" + line);
+		
 		switch (StringUtils.countOccurrencesOf(line, "/")) {
 		case 1:
 			return line;
@@ -528,13 +549,14 @@ public class Extraction {
 
 	private Interface getRequiredInterface(MicroService senderService, MicroService targetService, String row) {
 		Interface senderInterface = null;
-		if (checkIfRequiredInterfaceExist(senderService, "REQUIRE: " + targetService.getHost())) {
-			senderInterface = getRequiredInterfaceByEndPoint(senderService, "REQUIRE: " + targetService.getHost());
+		String endPoint = "/" + targetService.getName()+ "/";
+		if (checkIfRequiredInterfaceExist(senderService, endPoint)) {
+			senderInterface = getRequiredInterfaceByEndPoint(senderService, endPoint);
 		} else {
 			senderInterface = factory.createInterface();
 		}
-		senderInterface.setEndPoint("REQUIRE: " + targetService.getHost());
-		senderInterface.setName("Require: " + targetService.getName());
+		senderInterface.setEndPoint(endPoint);
+		senderInterface.setName("Needs: " + targetService.getName() + " @Addr: " +targetService.getHost());
 		senderInterface.setRequiredBy(senderService);
 		// Add to Source the required Interface
 		senderService.getRequire().add(senderInterface);

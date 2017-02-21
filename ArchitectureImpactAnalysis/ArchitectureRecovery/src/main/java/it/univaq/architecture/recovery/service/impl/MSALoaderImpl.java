@@ -120,14 +120,14 @@ public class MSALoaderImpl implements MSALoader {
 
 	public String getServiceDiscovery(Product product) {
 		String serviceDiscovery = "NoServiceDiscovery";
-		System.out.println(serviceType.SERVICE_DISCOVERY);
+//		System.out.println(serviceType.SERVICE_DISCOVERY);
 		Iterator<MicroService> it = product.getComposedBy().iterator();
 		while (it.hasNext()) {
 			MicroService microService = (MicroService) it.next();
-			System.out.println(
-					microService.getName() + " isFunctional? " + microService.getIsFunctional() + "Type is: " + microService.getType());
+//			System.out.println(
+//					microService.getName() + " isFunctional? " + microService.getIsFunctional() + "Type is: " + microService.getType());
 			if (!microService.getIsFunctional().booleanValue()) {
-				System.out.println(microService.getType().toString());
+//				System.out.println(microService.getType().toString());
 				if (microService.getType().equals(serviceType.SERVICE_DISCOVERY)) {
 					serviceDiscovery = microService.getHost();
 					return serviceDiscovery;

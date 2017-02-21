@@ -1,5 +1,6 @@
 package it.univaq.architecture.recovery.granchelli;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
 
@@ -23,6 +24,7 @@ import it.univaq.architecture.recovery.service.impl.DockerParser;
 import it.univaq.architecture.recovery.service.impl.Extraction;
 import it.univaq.architecture.recovery.service.impl.GitHubManager;
 import it.univaq.architecture.recovery.service.impl.MSALoaderImpl;
+import it.univaq.architecture.recovery.service.impl.TcpDumpLoggerImpl;
 
 @SpringBootApplication
 @ComponentScan(basePackages = { "it.univaq.architecture.recovery.service.impl.*" })
@@ -32,8 +34,10 @@ public class ArchitectureRecoveryApplication {
 
 	final static Logger logger = Logger.getLogger(ArchitectureRecoveryApplication.class);
 	public static MSALoaderImpl factory = new MSALoaderImpl();
-	public Extraction extractor = new Extraction();
-
+	public static TcpDumpLoggerImpl tcpDumpLoggerImpl = new TcpDumpLoggerImpl();
+	static String logFileName = System.getProperty("user.home") + File.separator + "ArchitectureRecovery" + File.separator + "log_21feb.txt";
+	public Extraction extractor = new Extraction(logFileName);
+	
 	public static void main(String[] args)
 			throws IOException, InvalidRemoteException, TransportException, GitAPIException, InterruptedException {
 		SpringApplication.run(ArchitectureRecoveryApplication.class, args);
@@ -41,11 +45,14 @@ public class ArchitectureRecoveryApplication {
 		// this.repoManager.setLocalPath("/home/grankellowsky/Tesi/Codice/prova2");
 		// this.repoManager.setRemotePath("https://github.com/yanglei99/acmeair-nodejs.git");
 		// System.out.println("INSTANZIAZIONE MANAGER GITHUB");
+		
 		GitHubManager test = new GitHubManager("/home/grankellowsky/Tesi/Codice/prova3",
 				"https://github.com/yanglei99/acmeair-nodejs.git");
 		test.init();
+		
 //		test.testClone();
 		// File localPath = new File(test.getLocalPath());
+		
 		EList<Developer> devs = test.getCommits();
 		logger.info("microServicesArch Element Created");
 		MicroserviceArch microServicesArch = new MicroserviceArch();
@@ -62,13 +69,20 @@ public class ArchitectureRecoveryApplication {
 		manager.getNetwork(microServicesArch.getServices());
 		microServicesArch.setNetworkName(manager.checkIfContainerHasTheSameNetwork(microServicesArch.getServices()));
 		microServicesArch.setClientIp(manager.getClientIP(microServicesArch.getNetworkName().get(0)));
+		
 		// Da Gli pseudo Microservice Ottenuti da Docker, Creo un istanza di
 		// Product
 		// Questo sarà il primo passo iterativo
+		
 		Product product = Converter.createProduct(microServicesArch.getServices(), microServicesArch.getClientIp());
 		product.getDevelopers().addAll(devs);
-		Extraction extract = new Extraction();
-		
+		Extraction extract = new Extraction(logFileName);
+		//Attivazione TCPDUMMP
+		tcpDumpLoggerImpl.setLoggerFilename(logFileName);
+		tcpDumpLoggerImpl.startLogger(microServicesArch.getClientIp());
+		Thread.sleep(1000);
+		promptEnterKey();
+		//Fine TCPDUMP
 		extract.dynamicAnalysis(product, microServicesArch.getClientIp());
 //		extract.showDependency(product);
 		//Where to Save and Retrive model
