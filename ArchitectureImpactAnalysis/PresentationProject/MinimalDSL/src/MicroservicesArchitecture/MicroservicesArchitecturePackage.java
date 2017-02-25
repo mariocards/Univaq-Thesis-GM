@@ -552,7 +552,6 @@ public interface MicroservicesArchitecturePackage extends EPackage {
 	 */
 	int SERVICE_TYPE = 8;
 
-
 	/**
 	 * Returns the meta object for class '{@link MicroservicesArchitecture.Element <em>Element</em>}'.
 	 * <!-- begin-user-doc -->

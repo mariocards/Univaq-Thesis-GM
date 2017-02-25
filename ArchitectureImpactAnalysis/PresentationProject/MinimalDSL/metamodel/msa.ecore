@@ -22,10 +22,10 @@
   <eClassifiers xsi:type="ecore:EClass" name="MicroService" eSuperTypes="#//Element">
     <eAnnotations source="gmf.node">
       <details key="label" value="name"/>
-      <details key="color" value="102,255,127"/>
       <details key="border.style" value="solid"/>
       <details key="label.icon" value="false"/>
       <details key="figure" value="rectangle"/>
+      <details key="color" value="178,255,102"/>
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="compose" eType="#//Product"
         eOpposite="#//Product/composedBy"/>
@@ -33,26 +33,26 @@
         eOpposite="#//Cluster/contains"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="expose" upperBound="-1"
         eType="#//Interface" containment="true" eOpposite="#//Interface/exposedBy">
+      <eAnnotations source="gmf.affixed"/>
       <eAnnotations source="gmf.compartment">
-        <details key="target.decoration" value="arrow"/>
-        <details key="style" value="dash"/>
+        <details key="collapsible" value="true"/>
         <details key="layout" value="list"/>
-        <details key="incoming" value="false"/>
       </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="host" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="owned" eType="#//Team"
         eOpposite="#//Team/workOn"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="isInfrastructural" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="require" upperBound="-1"
         eType="#//Interface" containment="true" eOpposite="#//Interface/requiredBy">
+      <eAnnotations source="gmf.affixed"/>
       <eAnnotations source="gmf.compartment">
-        <details key="target.decoration" value="arrow"/>
-        <details key="style" value="dash"/>
+        <details key="collapsible" value="true"/>
         <details key="layout" value="list"/>
-        <details key="incoming" value="false"/>
       </eAnnotations>
     </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="#//serviceType"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="isFunctional" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBooleanObject"
+        defaultValueLiteral="true" iD="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Cluster" eSuperTypes="#//Element">
     <eStructuralFeatures xsi:type="ecore:EReference" name="contains" upperBound="-1"
@@ -75,11 +75,11 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Interface" eSuperTypes="#//Element">
     <eAnnotations source="gmf.node">
+      <details key="color" value="104,199,246"/>
       <details key="label" value="endPoint"/>
-      <details key="border.style" value="solid"/>
-      <details key="color" value="102,153,255"/>
+      <details key="border.style" value="dash"/>
       <details key="label.icon" value="false"/>
-      <details key="figure" value="ellipse"/>
+      <details key="figure" value="rectangle"/>
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="exposedBy" eType="#//MicroService"
         eOpposite="#//MicroService/expose"/>
@@ -90,13 +90,13 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Link" eSuperTypes="#//Element">
     <eAnnotations source="gmf.link">
+      <details key="color" value="255,0,0"/>
       <details key="label" value="name"/>
-      <details key="source" value="source"/>
-      <details key="target.decoration" value="arrow"/>
-      <details key="source.decoration" value="filledrhomb"/>
-      <details key="target" value="target"/>
       <details key="label.icon" value="false"/>
-      <details key="color" value="204,204,102"/>
+      <details key="source" value="source"/>
+      <details key="target" value="target"/>
+      <details key="source.decoration" value="filledrhomb"/>
+      <details key="target.decoration" value="arrow"/>
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="source" eType="#//Interface"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="target" eType="#//Interface"/>
@@ -107,14 +107,21 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="composedBy" upperBound="-1"
         eType="#//Developer"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="workOn" upperBound="-1"
-        eType="#//MicroService" eOpposite="#//MicroService/owned">
-      <eAnnotations source="gmf.link">
-        <details key="target.decoration" value="arrow"/>
-        <details key="layout" value="list"/>
-        <details key="style" value="dot"/>
-      </eAnnotations>
-    </eStructuralFeatures>
+        eType="#//MicroService" eOpposite="#//MicroService/owned"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="workFor" eType="#//Product"
         eOpposite="#//Product/teams"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="serviceType">
+    <eLiterals name="generalFuncion"/>
+    <eLiterals name="Authentication" value="1"/>
+    <eLiterals name="serviceDiscovery" value="2"/>
+    <eLiterals name="LoadBalancer" value="3"/>
+    <eLiterals name="HealthCheck" value="4"/>
+    <eLiterals name="Monitor" value="5"/>
+    <eLiterals name="APIGateways" value="6"/>
+    <eLiterals name="Security" value="7"/>
+    <eLiterals name="Messaging" value="8"/>
+    <eLiterals name="Logging" value="9"/>
+    <eLiterals name="Resilience" value="10"/>
   </eClassifiers>
 </ecore:EPackage>

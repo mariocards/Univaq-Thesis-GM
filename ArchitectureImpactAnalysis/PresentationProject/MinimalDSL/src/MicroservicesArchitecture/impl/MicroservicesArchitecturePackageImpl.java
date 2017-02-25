@@ -13,7 +13,6 @@ import MicroservicesArchitecture.MicroservicesArchitecturePackage;
 import MicroservicesArchitecture.Product;
 import MicroservicesArchitecture.Team;
 import MicroservicesArchitecture.serviceType;
-
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EEnum;
@@ -784,7 +783,6 @@ public class MicroservicesArchitecturePackageImpl extends EPackageImpl implement
 		   source, 
 		   new String[] {
 			 "color", "255,0,0",
-			 "label", "name",
 			 "label.icon", "false",
 			 "source", "source",
 			 "target", "target",

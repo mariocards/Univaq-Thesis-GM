@@ -87,13 +87,6 @@
   <links>
     <domainMetaElement
         href="msa.ecore#//Link"/>
-    <labelMappings
-        xsi:type="gmfmap:FeatureLabelMapping">
-      <diagramLabel
-          href="msa.gmfgraph#LinkLabel"/>
-      <features
-          href="msa.ecore#//Element/name"/>
-    </labelMappings>
     <containmentFeature
         href="msa.ecore#//Product/links"/>
     <tool

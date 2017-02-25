@@ -89,7 +89,6 @@
   <eClassifiers xsi:type="ecore:EClass" name="Link" eSuperTypes="#//Element">
     <eAnnotations source="gmf.link">
       <details key="color" value="255,0,0"/>
-      <details key="label" value="name"/>
       <details key="label.icon" value="false"/>
       <details key="source" value="source"/>
       <details key="target" value="target"/>

@@ -9,8 +9,6 @@ import MicroservicesArchitecture.MicroservicesArchitecturePackage;
 import MicroservicesArchitecture.Product;
 import MicroservicesArchitecture.Team;
 import MicroservicesArchitecture.serviceType;
-import MicroservicesArchitecture.service.ServiceDiscoveryListener;
-
 import java.util.Collection;
 
 import org.eclipse.emf.common.notify.Notification;
@@ -391,11 +389,6 @@ public class MicroServiceImpl extends ElementImpl implements MicroService {
 		serviceType oldType = type;
 		type = newType == null ? TYPE_EDEFAULT : newType;
 		if (eNotificationRequired())
-			System.out.println("Service " + this.getName() + " has changed type. Now is : " + newType);
-			if(newType.equals(serviceType.SERVICE_DISCOVERY)){
-				ServiceDiscoveryListener.createDirectoryAndFile();
-				ServiceDiscoveryListener.writeServiceDiscovery(this.getHost());
-			}
 			eNotify(new ENotificationImpl(this, Notification.SET, MicroservicesArchitecturePackage.MICRO_SERVICE__TYPE, oldType, type));
 	}
 
@@ -417,7 +410,6 @@ public class MicroServiceImpl extends ElementImpl implements MicroService {
 		Boolean oldIsFunctional = isFunctional;
 		isFunctional = newIsFunctional;
 		if (eNotificationRequired())
-			System.out.println("Service " + this.getName() + " has changed Functionality. Now isFunctional: " + newIsFunctional.toString());
 			eNotify(new ENotificationImpl(this, Notification.SET, MicroservicesArchitecturePackage.MICRO_SERVICE__IS_FUNCTIONAL, oldIsFunctional, isFunctional));
 	}
 

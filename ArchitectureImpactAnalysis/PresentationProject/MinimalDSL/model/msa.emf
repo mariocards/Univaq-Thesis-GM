@@ -18,12 +18,10 @@ class Product extends Element {
 class MicroService extends Element {
   ref Product#composedBy compose;
   ref Cluster#contains belongTo;
-
   @gmf.compartment(collapsible="true", layout="list")
   val Interface[*]#exposedBy expose;
   attr String host;
   ref Team#workOn owned;
-
   @gmf.compartment(collapsible="true", layout="list")
   val Interface[*]#requiredBy require;
   attr serviceType type;
@@ -51,7 +49,7 @@ class Interface extends Element {
   ref MicroService#require requiredBy;
 }
 
-@gmf.link(color="255,0,0", label="name", label.icon="false", source="source", target="target", source.decoration="filledrhomb", target.decoration="arrow")
+@gmf.link(color="255,0,0", label.icon="false", source="source", target="target", source.decoration="filledrhomb", target.decoration="arrow")
 class Link extends Element {
   ref Interface source;
   ref Interface target;

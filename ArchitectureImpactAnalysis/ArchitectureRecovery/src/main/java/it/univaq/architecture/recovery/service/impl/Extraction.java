@@ -37,7 +37,9 @@ public class Extraction {
 
 		readLog(prd, filteredLog, ClientIP);
 		cleanDependency(prd);
-
+//		MicroService client = getMicroservice(prd, ClientIP);
+//		eraseDependency(client, prd);
+//		prd.getComposedBy().remove(client);
 	}
 
 	private void cleanDependency(Product prd) {
@@ -51,7 +53,7 @@ public class Extraction {
 		}
 		prd.getLinks().clear();
 		prd.getLinks().addAll(cleanedList);
-
+		
 	}
 
 	public void dynamicAnalysisWithServiceDiscovery(Product product, String ClientIP, String ServiceDiscovery) {

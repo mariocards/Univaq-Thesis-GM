@@ -24,7 +24,7 @@ public class TcpDumpLoggerImpl implements Logger {
 		try {
 			String[] ifconfig = new String[100000];
 			String command = "ifconfig";
-			System.out.println(command);
+//			System.out.println(command);
 			p = Runtime.getRuntime().exec(command);
 			BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
 			int i = 0;
@@ -41,9 +41,9 @@ public class TcpDumpLoggerImpl implements Logger {
 				String line = fittedArray[j];
 				if (line.contains(clientIp)) {
 					result =  ifconfig[j-1];
-					System.out.println(result);
+//					System.out.println(result);
 					result = result.substring(0, result.indexOf(" "));
-					System.out.println(result);
+//					System.out.println(result);
 				}
 			}
 		} catch (Exception e) {

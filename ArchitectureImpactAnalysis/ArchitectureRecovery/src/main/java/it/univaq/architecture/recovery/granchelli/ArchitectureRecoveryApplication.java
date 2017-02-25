@@ -35,9 +35,10 @@ public class ArchitectureRecoveryApplication {
 	final static Logger logger = Logger.getLogger(ArchitectureRecoveryApplication.class);
 	public static MSALoaderImpl factory = new MSALoaderImpl();
 	public static TcpDumpLoggerImpl tcpDumpLoggerImpl = new TcpDumpLoggerImpl();
-	static String logFileName = System.getProperty("user.home") + File.separator + "ArchitectureRecovery" + File.separator + "log_21feb.txt";
+	static String logFileName = System.getProperty("user.home") + File.separator + "ArchitectureRecovery"
+			+ File.separator + "log_23feb.txt";
 	public Extraction extractor = new Extraction(logFileName);
-	
+
 	public static void main(String[] args)
 			throws IOException, InvalidRemoteException, TransportException, GitAPIException, InterruptedException {
 		SpringApplication.run(ArchitectureRecoveryApplication.class, args);
@@ -45,14 +46,14 @@ public class ArchitectureRecoveryApplication {
 		// this.repoManager.setLocalPath("/home/grankellowsky/Tesi/Codice/prova2");
 		// this.repoManager.setRemotePath("https://github.com/yanglei99/acmeair-nodejs.git");
 		// System.out.println("INSTANZIAZIONE MANAGER GITHUB");
-		
+		logger.info("Cloning GIT REPO: https://github.com/acmeair/acmeair-nodejs.git");
 		GitHubManager test = new GitHubManager("/home/grankellowsky/Tesi/Codice/prova3",
 				"https://github.com/yanglei99/acmeair-nodejs.git");
 		test.init();
-		
-//		test.testClone();
+		logger.info("Wait the end of the Git Repo Download");
+		// test.testClone();
 		// File localPath = new File(test.getLocalPath());
-		
+		logger.info("Git Repo Download Finished!");
 		EList<Developer> devs = test.getCommits();
 		logger.info("microServicesArch Element Created");
 		MicroserviceArch microServicesArch = new MicroserviceArch();
@@ -69,83 +70,86 @@ public class ArchitectureRecoveryApplication {
 		manager.getNetwork(microServicesArch.getServices());
 		microServicesArch.setNetworkName(manager.checkIfContainerHasTheSameNetwork(microServicesArch.getServices()));
 		microServicesArch.setClientIp(manager.getClientIP(microServicesArch.getNetworkName().get(0)));
-		
+
 		// Da Gli pseudo Microservice Ottenuti da Docker, Creo un istanza di
 		// Product
 		// Questo sarà il primo passo iterativo
-		
+		logger.info("Docker Extraction Finished.");
+		logger.info("Remeber to Run your MicroService Architecture");
+		logger.info("");
 		Product product = Converter.createProduct(microServicesArch.getServices(), microServicesArch.getClientIp());
 		product.getDevelopers().addAll(devs);
 		Extraction extract = new Extraction(logFileName);
-		//Attivazione TCPDUMMP
+		// Attivazione TCPDUMMP
+		logger.info("A .sh Script has been generated in: " + System.getProperty("user.home") + File.separator
+				+ "ArchitectureRecovery");
+		logger.info("The Scipt name is:" + System.getProperty("user.home") + File.separator + "ArchitectureRecovery"
+				+ File.separator + "runScript.sh");
+		logger.info("Don't Forget to make it runnable:");
+		logger.info("- typing on the bash chmod +x runScript.sh");
+		logger.info("- Or with Right Click -> Permissions -> is Executable");
 		tcpDumpLoggerImpl.setLoggerFilename(logFileName);
 		tcpDumpLoggerImpl.startLogger(microServicesArch.getClientIp());
 		Thread.sleep(1000);
-		promptEnterKey();
-		//Fine TCPDUMP
+		promptEnterKey("Press Enter if you finished your Log Analysis");
+
+		logger.info("Analysis Finished");
+		logger.info("Log File: " + logFileName);
+		// Fine TCPDUMP
 		extract.dynamicAnalysis(product, microServicesArch.getClientIp());
-//		extract.showDependency(product);
-		//Where to Save and Retrive model
+		// extract.showDependency(product);
+		// Where to Save and Retrive model
 		String pathToSaveModel = "/home/grankellowsky/Tesi/Codice/workspaces/runtime-EclipseApplication/it.univaq.recovery.diagram";
 		String nameOfTheModel = "/acmerair.microservicesarchitecture";
-		//Save Architectural Model
-//		
+		// Save Architectural Model
+		//
 		factory.saveModel(product, pathToSaveModel, nameOfTheModel);
-		//Messages
-		System.out.println("The model as been saved in the runtime Eclipse project ");
-		System.out.println("Model saved in Path: " + pathToSaveModel);
-		System.out.println("Model saved with Name: " + nameOfTheModel);
-		System.out.println();
-		System.out.println("Go to the Eclipse-RunTime Project and choose the Service Discovery");
+		// Messages
+		logger.info("The model as been saved in the runtime Eclipse project ");
+		logger.info("Model saved in Path: " + pathToSaveModel);
+		logger.info("Model saved with Name: " + nameOfTheModel);
+		logger.info("======================================");
+		logger.info("Go to the Eclipse-RunTime Project and choose the Service Discovery");
 		promptEnterKey();
-		//Get the new Model
+		// Get the new Model
 
 		Thread.sleep(1500);
 		Product filteredProduct = factory.getModel(pathToSaveModel, nameOfTheModel);
 		String serviceDiscovery = factory.getServiceDiscovery(filteredProduct);
-		while(CheckServiceDiscovery(serviceDiscovery)){
+		while (CheckServiceDiscovery(serviceDiscovery)) {
 			promptEnterKey();
 			filteredProduct = factory.getModel(pathToSaveModel, nameOfTheModel);
 			serviceDiscovery = factory.getServiceDiscovery(product);
-			
+
 		}
-		System.out.println("I got this ServiceDiscory: " + serviceDiscovery);
+		logger.info("ServiceDiscory: " + serviceDiscovery);
 		extract.dynamicAnalysisWithServiceDiscovery(filteredProduct, microServicesArch.getClientIp(), serviceDiscovery);
-//		extract.showDependency(filteredProduct);
+		// extract.showDependency(filteredProduct);
 		factory.saveModel(filteredProduct, pathToSaveModel, nameOfTheModel);
-		System.out.println("Your Model is now update. Check the Eclipse-RunTime");
-		
+		logger.info("Your Model is now update. Check the Eclipse-RunTime");
+		logger.info("A Logical Architecture has been generated");
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 
 	private static boolean CheckServiceDiscovery(String serviceDiscovery) {
 		if (serviceDiscovery.equals("NoServiceDiscovery")) {
-			System.out.println("You Didn't Selected the Service Discovery, please, in order to filter this infrastructural node, go back to elcipse runtime, select and save.");
+			logger.info(
+					"You Didn't Selected the Service Discovery, please, in order to filter this infrastructural node, go back to elcipse runtime, select and save.");
 			return true;
 		}
 		return false;
 	}
 
 	private static void promptEnterKey() {
-		System.out.println("Press \"ENTER\" if you finished your modifications.(Don't Forget to Save and Close)");
-		   Scanner scanner = new Scanner(System.in);
-		   scanner.nextLine();
-		
+		logger.info("Press \"ENTER\" if you finished your modifications.(Don't Forget to Save and Close)");
+		Scanner scanner = new Scanner(System.in);
+		scanner.nextLine();
+
+	}
+
+	private static void promptEnterKey(String message) {
+		logger.info(message);
+		Scanner scanner = new Scanner(System.in);
+		scanner.nextLine();
+
 	}
 }
-

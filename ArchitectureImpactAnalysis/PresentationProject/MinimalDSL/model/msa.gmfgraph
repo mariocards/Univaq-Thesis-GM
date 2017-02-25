@@ -49,9 +49,6 @@
         <foregroundColor xsi:type="gmfgraph:RGBColor" red="255"/>
       </actualFigure>
     </descriptors>
-    <descriptors name="LinkLabelFigure">
-      <actualFigure xsi:type="gmfgraph:Label" name="LinkLabelLabel" text="Link"/>
-    </descriptors>
   </figures>
   <nodes name="MicroService" figure="MicroServiceFigure"/>
   <nodes name="Developer" figure="DeveloperFigure"/>
@@ -62,5 +59,4 @@
   <labels name="MicroServiceLabel" figure="MicroServiceFigure" elementIcon="false" accessor="//@figures.0/@descriptors.0/@accessors.0"/>
   <labels name="DeveloperLabel" figure="DeveloperFigure" elementIcon="false" accessor="//@figures.0/@descriptors.1/@accessors.0"/>
   <labels name="InterfaceLabel" figure="InterfaceFigure" elementIcon="false" accessor="//@figures.0/@descriptors.2/@accessors.0"/>
-  <labels name="LinkLabel" figure="LinkLabelFigure" elementIcon="false"/>
 </gmfgraph:Canvas>
