@@ -21,8 +21,9 @@ public class MicroservicesArchitectureModelingAssistantProviderOfProductEditPart
 	@Override
 
 	public List<IElementType> getTypesForPopupBar(IAdaptable host) {
-		List<IElementType> types = new ArrayList<IElementType>(2);
+		List<IElementType> types = new ArrayList<IElementType>(3);
 		types.add(MicroservicesArchitecture.diagram.providers.MicroservicesArchitectureElementTypes.MicroService_2001);
+		types.add(MicroservicesArchitecture.diagram.providers.MicroservicesArchitectureElementTypes.Team_2003);
 		types.add(MicroservicesArchitecture.diagram.providers.MicroservicesArchitectureElementTypes.Developer_2002);
 		return types;
 	}

@@ -14,7 +14,10 @@
       <domainMetaElement
           href="msa.ecore#//MicroService"/>
       <labelMappings
-          xsi:type="gmfmap:FeatureLabelMapping">
+          xsi:type="gmfmap:FeatureLabelMapping"
+          viewPattern="    {0}"
+          editorPattern="    {0}"
+          editPattern="    {0}">
         <diagramLabel
             href="msa.gmfgraph#MicroServiceLabel"/>
         <features
@@ -66,6 +69,26 @@
   </nodes>
   <nodes>
     <containmentFeature
+        href="msa.ecore#//Product/teams"/>
+    <ownedChild>
+      <domainMetaElement
+          href="msa.ecore#//Team"/>
+      <labelMappings
+          xsi:type="gmfmap:FeatureLabelMapping">
+        <diagramLabel
+            href="msa.gmfgraph#TeamLabel"/>
+        <features
+            href="msa.ecore#//Element/name"/>
+      </labelMappings>
+      <tool
+          xsi:type="gmftool:CreationTool"
+          href="msa.gmftool#//@palette/@tools.0/@tools.3"/>
+      <diagramNode
+          href="msa.gmfgraph#Team"/>
+    </ownedChild>
+  </nodes>
+  <nodes>
+    <containmentFeature
         href="msa.ecore#//Product/developers"/>
     <ownedChild>
       <domainMetaElement
@@ -75,7 +98,7 @@
         <diagramLabel
             href="msa.gmfgraph#DeveloperLabel"/>
         <features
-            href="msa.ecore#//Element/name"/>
+            href="msa.ecore#//Developer/email"/>
       </labelMappings>
       <tool
           xsi:type="gmftool:CreationTool"
@@ -91,7 +114,7 @@
         href="msa.ecore#//Product/links"/>
     <tool
         xsi:type="gmftool:CreationTool"
-        href="msa.gmftool#//@palette/@tools.1/@tools.0"/>
+        href="msa.gmftool#//@palette/@tools.1/@tools.1"/>
     <diagramLink
         href="msa.gmfgraph#Link"/>
     <sourceMetaFeature
@@ -100,6 +123,38 @@
     <linkMetaFeature
         xsi:type="ecore:EReference"
         href="msa.ecore#//Link/target"/>
+  </links>
+  <links>
+    <labelMappings
+        xsi:type="gmfmap:DesignLabelMapping"
+        readOnly="true">
+      <diagramLabel
+          href="msa.gmfgraph#MicroServiceOwnedExternalLabel"/>
+    </labelMappings>
+    <tool
+        xsi:type="gmftool:CreationTool"
+        href="msa.gmftool#//@palette/@tools.1/@tools.2"/>
+    <diagramLink
+        href="msa.gmfgraph#MicroServiceOwned"/>
+    <linkMetaFeature
+        xsi:type="ecore:EReference"
+        href="msa.ecore#//MicroService/owned"/>
+  </links>
+  <links>
+    <labelMappings
+        xsi:type="gmfmap:DesignLabelMapping"
+        readOnly="true">
+      <diagramLabel
+          href="msa.gmfgraph#TeamComposedByExternalLabel"/>
+    </labelMappings>
+    <tool
+        xsi:type="gmftool:CreationTool"
+        href="msa.gmftool#//@palette/@tools.1/@tools.0"/>
+    <diagramLink
+        href="msa.gmfgraph#TeamComposedBy"/>
+    <linkMetaFeature
+        xsi:type="ecore:EReference"
+        href="msa.ecore#//Team/composedBy"/>
   </links>
   <diagram>
     <diagramCanvas

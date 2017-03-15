@@ -106,6 +106,6 @@ public class LinkEditPart extends ConnectionNodeEditPart implements ITreeBranchE
 	/**
 	 * @generated
 	 */
-	static final Color THIS_FORE = new Color(null, 255, 0, 0);
+	static final Color THIS_FORE = new Color(null, 0, 26, 26);
 
 }

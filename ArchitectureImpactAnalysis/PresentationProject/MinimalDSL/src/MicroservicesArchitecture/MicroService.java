@@ -24,7 +24,7 @@ import org.eclipse.emf.common.util.EList;
  * </ul>
  *
  * @see MicroservicesArchitecture.MicroservicesArchitecturePackage#getMicroService()
- * @model annotation="gmf.node label='name' border.style='solid' label.icon='false' figure='rectangle' color='178,255,102'"
+ * @model annotation="gmf.node label='name' border.style='solid' label.pattern='    {0}' label.icon='false' figure='rectangle' border.color='0,153,153' border.width='4'"
  * @generated
  */
 public interface MicroService extends Element {
@@ -143,6 +143,7 @@ public interface MicroService extends Element {
 	 * @see MicroservicesArchitecture.MicroservicesArchitecturePackage#getMicroService_Owned()
 	 * @see MicroservicesArchitecture.Team#getWorkOn
 	 * @model opposite="workOn"
+	 *        annotation="gmf.link target.decoration='arrow' style='dash'"
 	 * @generated
 	 */
 	Team getOwned();

@@ -65,6 +65,8 @@ public class ProductCanonicalEditPolicy extends CanonicalEditPolicy {
 			myFeaturesToSynchronize
 					.add(MicroservicesArchitecture.MicroservicesArchitecturePackage.eINSTANCE.getProduct_ComposedBy());
 			myFeaturesToSynchronize
+					.add(MicroservicesArchitecture.MicroservicesArchitecturePackage.eINSTANCE.getProduct_Teams());
+			myFeaturesToSynchronize
 					.add(MicroservicesArchitecture.MicroservicesArchitecturePackage.eINSTANCE.getProduct_Developers());
 		}
 		return myFeaturesToSynchronize;
@@ -104,6 +106,7 @@ public class ProductCanonicalEditPolicy extends CanonicalEditPolicy {
 		int visualID = MicroservicesArchitecture.diagram.part.MicroservicesArchitectureVisualIDRegistry
 				.getVisualID(view);
 		return visualID == MicroservicesArchitecture.diagram.edit.parts.MicroServiceEditPart.VISUAL_ID
+				|| visualID == MicroservicesArchitecture.diagram.edit.parts.TeamEditPart.VISUAL_ID
 				|| visualID == MicroservicesArchitecture.diagram.edit.parts.DeveloperEditPart.VISUAL_ID;
 	}
 
@@ -275,6 +278,14 @@ public class ProductCanonicalEditPolicy extends CanonicalEditPolicy {
 			if (!domain2NotationMap.containsKey(view.getElement())) {
 				result.addAll(MicroservicesArchitecture.diagram.part.MicroservicesArchitectureDiagramUpdater
 						.getMicroService_2001ContainedLinks(view));
+			}
+			domain2NotationMap.putView(view.getElement(), view);
+			break;
+		}
+		case MicroservicesArchitecture.diagram.edit.parts.TeamEditPart.VISUAL_ID: {
+			if (!domain2NotationMap.containsKey(view.getElement())) {
+				result.addAll(MicroservicesArchitecture.diagram.part.MicroservicesArchitectureDiagramUpdater
+						.getTeam_2003ContainedLinks(view));
 			}
 			domain2NotationMap.putView(view.getElement(), view);
 			break;

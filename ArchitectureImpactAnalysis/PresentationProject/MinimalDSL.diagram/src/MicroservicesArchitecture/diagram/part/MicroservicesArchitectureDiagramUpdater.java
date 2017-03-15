@@ -64,6 +64,16 @@ public class MicroservicesArchitectureDiagramUpdater {
 				continue;
 			}
 		}
+		for (Iterator<?> it = modelElement.getTeams().iterator(); it.hasNext();) {
+			MicroservicesArchitecture.Team childElement = (MicroservicesArchitecture.Team) it.next();
+			int visualID = MicroservicesArchitecture.diagram.part.MicroservicesArchitectureVisualIDRegistry
+					.getNodeVisualID(view, childElement);
+			if (visualID == MicroservicesArchitecture.diagram.edit.parts.TeamEditPart.VISUAL_ID) {
+				result.add(new MicroservicesArchitecture.diagram.part.MicroservicesArchitectureNodeDescriptor(
+						childElement, visualID));
+				continue;
+			}
+		}
 		for (Iterator<?> it = modelElement.getDevelopers().iterator(); it.hasNext();) {
 			MicroservicesArchitecture.Developer childElement = (MicroservicesArchitecture.Developer) it.next();
 			int visualID = MicroservicesArchitecture.diagram.part.MicroservicesArchitectureVisualIDRegistry
@@ -143,6 +153,8 @@ public class MicroservicesArchitectureDiagramUpdater {
 			return getProduct_1000ContainedLinks(view);
 		case MicroservicesArchitecture.diagram.edit.parts.MicroServiceEditPart.VISUAL_ID:
 			return getMicroService_2001ContainedLinks(view);
+		case MicroservicesArchitecture.diagram.edit.parts.TeamEditPart.VISUAL_ID:
+			return getTeam_2003ContainedLinks(view);
 		case MicroservicesArchitecture.diagram.edit.parts.DeveloperEditPart.VISUAL_ID:
 			return getDeveloper_2002ContainedLinks(view);
 		case MicroservicesArchitecture.diagram.edit.parts.InterfaceEditPart.VISUAL_ID:
@@ -163,6 +175,8 @@ public class MicroservicesArchitectureDiagramUpdater {
 		switch (MicroservicesArchitecture.diagram.part.MicroservicesArchitectureVisualIDRegistry.getVisualID(view)) {
 		case MicroservicesArchitecture.diagram.edit.parts.MicroServiceEditPart.VISUAL_ID:
 			return getMicroService_2001IncomingLinks(view);
+		case MicroservicesArchitecture.diagram.edit.parts.TeamEditPart.VISUAL_ID:
+			return getTeam_2003IncomingLinks(view);
 		case MicroservicesArchitecture.diagram.edit.parts.DeveloperEditPart.VISUAL_ID:
 			return getDeveloper_2002IncomingLinks(view);
 		case MicroservicesArchitecture.diagram.edit.parts.InterfaceEditPart.VISUAL_ID:
@@ -183,6 +197,8 @@ public class MicroservicesArchitectureDiagramUpdater {
 		switch (MicroservicesArchitecture.diagram.part.MicroservicesArchitectureVisualIDRegistry.getVisualID(view)) {
 		case MicroservicesArchitecture.diagram.edit.parts.MicroServiceEditPart.VISUAL_ID:
 			return getMicroService_2001OutgoingLinks(view);
+		case MicroservicesArchitecture.diagram.edit.parts.TeamEditPart.VISUAL_ID:
+			return getTeam_2003OutgoingLinks(view);
 		case MicroservicesArchitecture.diagram.edit.parts.DeveloperEditPart.VISUAL_ID:
 			return getDeveloper_2002OutgoingLinks(view);
 		case MicroservicesArchitecture.diagram.edit.parts.InterfaceEditPart.VISUAL_ID:
@@ -211,7 +227,22 @@ public class MicroservicesArchitectureDiagramUpdater {
 	 */
 	public static List<MicroservicesArchitecture.diagram.part.MicroservicesArchitectureLinkDescriptor> getMicroService_2001ContainedLinks(
 			View view) {
-		return Collections.emptyList();
+		MicroservicesArchitecture.MicroService modelElement = (MicroservicesArchitecture.MicroService) view
+				.getElement();
+		LinkedList<MicroservicesArchitecture.diagram.part.MicroservicesArchitectureLinkDescriptor> result = new LinkedList<MicroservicesArchitecture.diagram.part.MicroservicesArchitectureLinkDescriptor>();
+		result.addAll(getOutgoingFeatureModelFacetLinks_MicroService_Owned_4002(modelElement));
+		return result;
+	}
+
+	/**
+	 * @generated
+	 */
+	public static List<MicroservicesArchitecture.diagram.part.MicroservicesArchitectureLinkDescriptor> getTeam_2003ContainedLinks(
+			View view) {
+		MicroservicesArchitecture.Team modelElement = (MicroservicesArchitecture.Team) view.getElement();
+		LinkedList<MicroservicesArchitecture.diagram.part.MicroservicesArchitectureLinkDescriptor> result = new LinkedList<MicroservicesArchitecture.diagram.part.MicroservicesArchitectureLinkDescriptor>();
+		result.addAll(getOutgoingFeatureModelFacetLinks_Team_ComposedBy_4003(modelElement));
+		return result;
 	}
 
 	/**
@@ -257,9 +288,27 @@ public class MicroservicesArchitectureDiagramUpdater {
 	/**
 	 * @generated
 	 */
+	public static List<MicroservicesArchitecture.diagram.part.MicroservicesArchitectureLinkDescriptor> getTeam_2003IncomingLinks(
+			View view) {
+		MicroservicesArchitecture.Team modelElement = (MicroservicesArchitecture.Team) view.getElement();
+		Map<EObject, Collection<EStructuralFeature.Setting>> crossReferences = EcoreUtil.CrossReferencer
+				.find(view.eResource().getResourceSet().getResources());
+		LinkedList<MicroservicesArchitecture.diagram.part.MicroservicesArchitectureLinkDescriptor> result = new LinkedList<MicroservicesArchitecture.diagram.part.MicroservicesArchitectureLinkDescriptor>();
+		result.addAll(getIncomingFeatureModelFacetLinks_MicroService_Owned_4002(modelElement, crossReferences));
+		return result;
+	}
+
+	/**
+	 * @generated
+	 */
 	public static List<MicroservicesArchitecture.diagram.part.MicroservicesArchitectureLinkDescriptor> getDeveloper_2002IncomingLinks(
 			View view) {
-		return Collections.emptyList();
+		MicroservicesArchitecture.Developer modelElement = (MicroservicesArchitecture.Developer) view.getElement();
+		Map<EObject, Collection<EStructuralFeature.Setting>> crossReferences = EcoreUtil.CrossReferencer
+				.find(view.eResource().getResourceSet().getResources());
+		LinkedList<MicroservicesArchitecture.diagram.part.MicroservicesArchitectureLinkDescriptor> result = new LinkedList<MicroservicesArchitecture.diagram.part.MicroservicesArchitectureLinkDescriptor>();
+		result.addAll(getIncomingFeatureModelFacetLinks_Team_ComposedBy_4003(modelElement, crossReferences));
+		return result;
 	}
 
 	/**
@@ -301,7 +350,22 @@ public class MicroservicesArchitectureDiagramUpdater {
 	 */
 	public static List<MicroservicesArchitecture.diagram.part.MicroservicesArchitectureLinkDescriptor> getMicroService_2001OutgoingLinks(
 			View view) {
-		return Collections.emptyList();
+		MicroservicesArchitecture.MicroService modelElement = (MicroservicesArchitecture.MicroService) view
+				.getElement();
+		LinkedList<MicroservicesArchitecture.diagram.part.MicroservicesArchitectureLinkDescriptor> result = new LinkedList<MicroservicesArchitecture.diagram.part.MicroservicesArchitectureLinkDescriptor>();
+		result.addAll(getOutgoingFeatureModelFacetLinks_MicroService_Owned_4002(modelElement));
+		return result;
+	}
+
+	/**
+	 * @generated
+	 */
+	public static List<MicroservicesArchitecture.diagram.part.MicroservicesArchitectureLinkDescriptor> getTeam_2003OutgoingLinks(
+			View view) {
+		MicroservicesArchitecture.Team modelElement = (MicroservicesArchitecture.Team) view.getElement();
+		LinkedList<MicroservicesArchitecture.diagram.part.MicroservicesArchitectureLinkDescriptor> result = new LinkedList<MicroservicesArchitecture.diagram.part.MicroservicesArchitectureLinkDescriptor>();
+		result.addAll(getOutgoingFeatureModelFacetLinks_Team_ComposedBy_4003(modelElement));
+		return result;
 	}
 
 	/**
@@ -394,6 +458,46 @@ public class MicroservicesArchitectureDiagramUpdater {
 	}
 
 	/**
+	 * @generated
+	 */
+	private static Collection<MicroservicesArchitecture.diagram.part.MicroservicesArchitectureLinkDescriptor> getIncomingFeatureModelFacetLinks_MicroService_Owned_4002(
+			MicroservicesArchitecture.Team target,
+			Map<EObject, Collection<EStructuralFeature.Setting>> crossReferences) {
+		LinkedList<MicroservicesArchitecture.diagram.part.MicroservicesArchitectureLinkDescriptor> result = new LinkedList<MicroservicesArchitecture.diagram.part.MicroservicesArchitectureLinkDescriptor>();
+		Collection<EStructuralFeature.Setting> settings = crossReferences.get(target);
+		for (EStructuralFeature.Setting setting : settings) {
+			if (setting.getEStructuralFeature() == MicroservicesArchitecture.MicroservicesArchitecturePackage.eINSTANCE
+					.getMicroService_Owned()) {
+				result.add(new MicroservicesArchitecture.diagram.part.MicroservicesArchitectureLinkDescriptor(
+						setting.getEObject(), target,
+						MicroservicesArchitecture.diagram.providers.MicroservicesArchitectureElementTypes.MicroServiceOwned_4002,
+						MicroservicesArchitecture.diagram.edit.parts.MicroServiceOwnedEditPart.VISUAL_ID));
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * @generated
+	 */
+	private static Collection<MicroservicesArchitecture.diagram.part.MicroservicesArchitectureLinkDescriptor> getIncomingFeatureModelFacetLinks_Team_ComposedBy_4003(
+			MicroservicesArchitecture.Developer target,
+			Map<EObject, Collection<EStructuralFeature.Setting>> crossReferences) {
+		LinkedList<MicroservicesArchitecture.diagram.part.MicroservicesArchitectureLinkDescriptor> result = new LinkedList<MicroservicesArchitecture.diagram.part.MicroservicesArchitectureLinkDescriptor>();
+		Collection<EStructuralFeature.Setting> settings = crossReferences.get(target);
+		for (EStructuralFeature.Setting setting : settings) {
+			if (setting.getEStructuralFeature() == MicroservicesArchitecture.MicroservicesArchitecturePackage.eINSTANCE
+					.getTeam_ComposedBy()) {
+				result.add(new MicroservicesArchitecture.diagram.part.MicroservicesArchitectureLinkDescriptor(
+						setting.getEObject(), target,
+						MicroservicesArchitecture.diagram.providers.MicroservicesArchitectureElementTypes.TeamComposedBy_4003,
+						MicroservicesArchitecture.diagram.edit.parts.TeamComposedByEditPart.VISUAL_ID));
+			}
+		}
+		return result;
+	}
+
+	/**
 	* @generated
 	*/
 	private static Collection<MicroservicesArchitecture.diagram.part.MicroservicesArchitectureLinkDescriptor> getOutgoingTypeModelFacetLinks_Link_4001(
@@ -429,6 +533,39 @@ public class MicroservicesArchitectureDiagramUpdater {
 			result.add(new MicroservicesArchitecture.diagram.part.MicroservicesArchitectureLinkDescriptor(src, dst,
 					link, MicroservicesArchitecture.diagram.providers.MicroservicesArchitectureElementTypes.Link_4001,
 					MicroservicesArchitecture.diagram.edit.parts.LinkEditPart.VISUAL_ID));
+		}
+		return result;
+	}
+
+	/**
+	* @generated
+	*/
+	private static Collection<MicroservicesArchitecture.diagram.part.MicroservicesArchitectureLinkDescriptor> getOutgoingFeatureModelFacetLinks_MicroService_Owned_4002(
+			MicroservicesArchitecture.MicroService source) {
+		LinkedList<MicroservicesArchitecture.diagram.part.MicroservicesArchitectureLinkDescriptor> result = new LinkedList<MicroservicesArchitecture.diagram.part.MicroservicesArchitectureLinkDescriptor>();
+		MicroservicesArchitecture.Team destination = source.getOwned();
+		if (destination == null) {
+			return result;
+		}
+		result.add(
+				new MicroservicesArchitecture.diagram.part.MicroservicesArchitectureLinkDescriptor(source, destination,
+						MicroservicesArchitecture.diagram.providers.MicroservicesArchitectureElementTypes.MicroServiceOwned_4002,
+						MicroservicesArchitecture.diagram.edit.parts.MicroServiceOwnedEditPart.VISUAL_ID));
+		return result;
+	}
+
+	/**
+	* @generated
+	*/
+	private static Collection<MicroservicesArchitecture.diagram.part.MicroservicesArchitectureLinkDescriptor> getOutgoingFeatureModelFacetLinks_Team_ComposedBy_4003(
+			MicroservicesArchitecture.Team source) {
+		LinkedList<MicroservicesArchitecture.diagram.part.MicroservicesArchitectureLinkDescriptor> result = new LinkedList<MicroservicesArchitecture.diagram.part.MicroservicesArchitectureLinkDescriptor>();
+		for (Iterator<?> destinations = source.getComposedBy().iterator(); destinations.hasNext();) {
+			MicroservicesArchitecture.Developer destination = (MicroservicesArchitecture.Developer) destinations.next();
+			result.add(new MicroservicesArchitecture.diagram.part.MicroservicesArchitectureLinkDescriptor(source,
+					destination,
+					MicroservicesArchitecture.diagram.providers.MicroservicesArchitectureElementTypes.TeamComposedBy_4003,
+					MicroservicesArchitecture.diagram.edit.parts.TeamComposedByEditPart.VISUAL_ID));
 		}
 		return result;
 	}

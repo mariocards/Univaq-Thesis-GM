@@ -315,11 +315,58 @@ public class MicroservicesArchitectureBaseItemSemanticEditPolicy extends Semanti
 		}
 
 		/**
+		 * @generated
+		 */
+		public boolean canCreateMicroServiceOwned_4002(MicroservicesArchitecture.MicroService source,
+				MicroservicesArchitecture.Team target) {
+			if (source != null) {
+				if (source.getOwned() != null) {
+					return false;
+				}
+			}
+			if (target != null && (target.getWorkOn().contains(target))) {
+				return false;
+			}
+
+			return canExistMicroServiceOwned_4002(source, target);
+		}
+
+		/**
+		 * @generated
+		 */
+		public boolean canCreateTeamComposedBy_4003(MicroservicesArchitecture.Team source,
+				MicroservicesArchitecture.Developer target) {
+			if (source != null) {
+				if (source.getComposedBy().contains(target)) {
+					return false;
+				}
+			}
+
+			return canExistTeamComposedBy_4003(source, target);
+		}
+
+		/**
 		* @generated
 		*/
 		public boolean canExistLink_4001(MicroservicesArchitecture.Product container,
 				MicroservicesArchitecture.Link linkInstance, MicroservicesArchitecture.Interface source,
 				MicroservicesArchitecture.Interface target) {
+			return true;
+		}
+
+		/**
+		* @generated
+		*/
+		public boolean canExistMicroServiceOwned_4002(MicroservicesArchitecture.MicroService source,
+				MicroservicesArchitecture.Team target) {
+			return true;
+		}
+
+		/**
+		* @generated
+		*/
+		public boolean canExistTeamComposedBy_4003(MicroservicesArchitecture.Team source,
+				MicroservicesArchitecture.Developer target) {
 			return true;
 		}
 	}

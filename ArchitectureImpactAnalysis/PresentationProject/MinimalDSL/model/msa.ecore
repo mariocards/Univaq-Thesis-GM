@@ -2,6 +2,7 @@
 <ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="MicroservicesArchitecture" nsURI="http://it.univaq.thesis.msa.arch"
     nsPrefix="msa">
+  <eAnnotations source="gmf"/>
   <eClassifiers xsi:type="ecore:EClass" name="Element" abstract="true">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
         defaultValueLiteral=""/>
@@ -23,9 +24,11 @@
     <eAnnotations source="gmf.node">
       <details key="label" value="name"/>
       <details key="border.style" value="solid"/>
+      <details key="label.pattern" value="    {0}"/>
       <details key="label.icon" value="false"/>
       <details key="figure" value="rectangle"/>
-      <details key="color" value="178,255,102"/>
+      <details key="border.color" value="0,153,153"/>
+      <details key="border.width" value="4"/>
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="compose" eType="#//Product"
         eOpposite="#//Product/composedBy"/>
@@ -40,7 +43,12 @@
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="host" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="owned" eType="#//Team"
-        eOpposite="#//Team/workOn"/>
+        eOpposite="#//Team/workOn">
+      <eAnnotations source="gmf.link">
+        <details key="target.decoration" value="arrow"/>
+        <details key="style" value="dash"/>
+      </eAnnotations>
+    </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="require" upperBound="-1"
         eType="#//Interface" containment="true" eOpposite="#//Interface/requiredBy">
       <eAnnotations source="gmf.compartment">
@@ -61,10 +69,12 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Developer" eSuperTypes="#//Element">
     <eAnnotations source="gmf.node">
-      <details key="label" value="name"/>
+      <details key="border.width" value="3"/>
+      <details key="border.color" value="66,133,244"/>
+      <details key="label" value="email"/>
       <details key="border.style" value="dot"/>
       <details key="label.icon" value="false"/>
-      <details key="figure" value="rounded"/>
+      <details key="figure" value="ellipse"/>
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="email" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="username" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -73,9 +83,8 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Interface" eSuperTypes="#//Element">
     <eAnnotations source="gmf.node">
-      <details key="color" value="104,199,246"/>
       <details key="label" value="endPoint"/>
-      <details key="border.style" value="dash"/>
+      <details key="border.style" value="solid"/>
       <details key="label.icon" value="false"/>
       <details key="figure" value="rectangle"/>
     </eAnnotations>
@@ -88,7 +97,7 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Link" eSuperTypes="#//Element">
     <eAnnotations source="gmf.link">
-      <details key="color" value="255,0,0"/>
+      <details key="color" value="0,26,26"/>
       <details key="label.icon" value="false"/>
       <details key="source" value="source"/>
       <details key="target" value="target"/>
@@ -101,8 +110,24 @@
         eOpposite="#//Product/links"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Team" eSuperTypes="#//Element">
+    <eAnnotations source="gmf.node">
+      <details key="border.width" value="3"/>
+      <details key="border.color" value="66,133,244"/>
+      <details key="label" value="name"/>
+      <details key="label.placement" value="internal"/>
+      <details key="border.style" value="solid"/>
+      <details key="label.icon" value="false"/>
+      <details key="figure" value="ellipse"/>
+      <details key="size" value="150,70"/>
+    </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="composedBy" upperBound="-1"
-        eType="#//Developer"/>
+        eType="#//Developer">
+      <eAnnotations source="gmf.link">
+        <details key="color" value="66,133,244"/>
+        <details key="target.decoration" value="none"/>
+        <details key="style" value="dash"/>
+      </eAnnotations>
+    </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="workOn" upperBound="-1"
         eType="#//MicroService" eOpposite="#//MicroService/owned"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="workFor" eType="#//Product"

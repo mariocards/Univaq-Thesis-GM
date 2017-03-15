@@ -3,13 +3,12 @@
  */
 package MicroservicesArchitecture.diagram.edit.parts;
 
+import org.eclipse.draw2d.Ellipse;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.MarginBorder;
-import org.eclipse.draw2d.RoundedRectangle;
 import org.eclipse.draw2d.Shape;
 import org.eclipse.draw2d.StackLayout;
-import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.gef.EditPart;
@@ -111,8 +110,8 @@ public class DeveloperEditPart extends ShapeNodeEditPart {
 	* @generated
 	*/
 	protected boolean addFixedChild(EditPart childEditPart) {
-		if (childEditPart instanceof MicroservicesArchitecture.diagram.edit.parts.DeveloperNameEditPart) {
-			((MicroservicesArchitecture.diagram.edit.parts.DeveloperNameEditPart) childEditPart)
+		if (childEditPart instanceof MicroservicesArchitecture.diagram.edit.parts.DeveloperEmailEditPart) {
+			((MicroservicesArchitecture.diagram.edit.parts.DeveloperEmailEditPart) childEditPart)
 					.setLabel(getPrimaryShape().getFigureDeveloperLabelFigure());
 			return true;
 		}
@@ -123,7 +122,7 @@ public class DeveloperEditPart extends ShapeNodeEditPart {
 	* @generated
 	*/
 	protected boolean removeFixedChild(EditPart childEditPart) {
-		if (childEditPart instanceof MicroservicesArchitecture.diagram.edit.parts.DeveloperNameEditPart) {
+		if (childEditPart instanceof MicroservicesArchitecture.diagram.edit.parts.DeveloperEmailEditPart) {
 			return true;
 		}
 		return false;
@@ -247,7 +246,7 @@ public class DeveloperEditPart extends ShapeNodeEditPart {
 	*/
 	public EditPart getPrimaryChildEditPart() {
 		return getChildBySemanticHint(MicroservicesArchitecture.diagram.part.MicroservicesArchitectureVisualIDRegistry
-				.getType(MicroservicesArchitecture.diagram.edit.parts.DeveloperNameEditPart.VISUAL_ID));
+				.getType(MicroservicesArchitecture.diagram.edit.parts.DeveloperEmailEditPart.VISUAL_ID));
 	}
 
 	/**
@@ -265,7 +264,7 @@ public class DeveloperEditPart extends ShapeNodeEditPart {
 	/**
 	 * @generated
 	 */
-	public class DeveloperFigure extends RoundedRectangle {
+	public class DeveloperFigure extends Ellipse {
 
 		/**
 		 * @generated
@@ -276,8 +275,9 @@ public class DeveloperEditPart extends ShapeNodeEditPart {
 		 * @generated
 		 */
 		public DeveloperFigure() {
-			this.setCornerDimensions(new Dimension(getMapMode().DPtoLP(8), getMapMode().DPtoLP(8)));
+			this.setLineWidth(3);
 			this.setLineStyle(Graphics.LINE_DOT);
+			this.setForegroundColor(THIS_FORE);
 			this.setBorder(new MarginBorder(getMapMode().DPtoLP(5), getMapMode().DPtoLP(5), getMapMode().DPtoLP(5),
 					getMapMode().DPtoLP(5)));
 			createContents();
@@ -304,5 +304,10 @@ public class DeveloperEditPart extends ShapeNodeEditPart {
 		}
 
 	}
+
+	/**
+	 * @generated
+	 */
+	static final Color THIS_FORE = new Color(null, 66, 133, 244);
 
 }

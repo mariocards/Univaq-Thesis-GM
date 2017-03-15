@@ -15,7 +15,6 @@ import org.eclipse.emf.ecore.EReference;
  * <ul>
  *   <li>each class,</li>
  *   <li>each feature of each class,</li>
- *   <li>each operation of each class,</li>
  *   <li>each enum,</li>
  *   <li>and each data type</li>
  * </ul>
@@ -552,6 +551,7 @@ public interface MicroservicesArchitecturePackage extends EPackage {
 	 */
 	int SERVICE_TYPE = 8;
 
+
 	/**
 	 * Returns the meta object for class '{@link MicroservicesArchitecture.Element <em>Element</em>}'.
 	 * <!-- begin-user-doc -->
@@ -987,7 +987,6 @@ public interface MicroservicesArchitecturePackage extends EPackage {
 	 * <ul>
 	 *   <li>each class,</li>
 	 *   <li>each feature of each class,</li>
-	 *   <li>each operation of each class,</li>
 	 *   <li>each enum,</li>
 	 *   <li>and each data type</li>
 	 * </ul>

@@ -235,11 +235,23 @@ public class MicroservicesArchitectureNavigatorContentProvider implements ICommo
 			result.addAll(createNavigatorItems(connectedViews, parentElement, false));
 			connectedViews = getChildrenByType(Collections.singleton(sv),
 					MicroservicesArchitecture.diagram.part.MicroservicesArchitectureVisualIDRegistry
+							.getType(MicroservicesArchitecture.diagram.edit.parts.TeamEditPart.VISUAL_ID));
+			result.addAll(createNavigatorItems(connectedViews, parentElement, false));
+			connectedViews = getChildrenByType(Collections.singleton(sv),
+					MicroservicesArchitecture.diagram.part.MicroservicesArchitectureVisualIDRegistry
 							.getType(MicroservicesArchitecture.diagram.edit.parts.DeveloperEditPart.VISUAL_ID));
 			result.addAll(createNavigatorItems(connectedViews, parentElement, false));
 			connectedViews = getDiagramLinksByType(Collections.singleton(sv),
 					MicroservicesArchitecture.diagram.part.MicroservicesArchitectureVisualIDRegistry
 							.getType(MicroservicesArchitecture.diagram.edit.parts.LinkEditPart.VISUAL_ID));
+			links.addChildren(createNavigatorItems(connectedViews, links, false));
+			connectedViews = getDiagramLinksByType(Collections.singleton(sv),
+					MicroservicesArchitecture.diagram.part.MicroservicesArchitectureVisualIDRegistry
+							.getType(MicroservicesArchitecture.diagram.edit.parts.MicroServiceOwnedEditPart.VISUAL_ID));
+			links.addChildren(createNavigatorItems(connectedViews, links, false));
+			connectedViews = getDiagramLinksByType(Collections.singleton(sv),
+					MicroservicesArchitecture.diagram.part.MicroservicesArchitectureVisualIDRegistry
+							.getType(MicroservicesArchitecture.diagram.edit.parts.TeamComposedByEditPart.VISUAL_ID));
 			links.addChildren(createNavigatorItems(connectedViews, links, false));
 			if (!links.isEmpty()) {
 				result.add(links);
@@ -250,6 +262,9 @@ public class MicroservicesArchitectureNavigatorContentProvider implements ICommo
 		case MicroservicesArchitecture.diagram.edit.parts.MicroServiceEditPart.VISUAL_ID: {
 			LinkedList<MicroservicesArchitecture.diagram.navigator.MicroservicesArchitectureAbstractNavigatorItem> result = new LinkedList<MicroservicesArchitecture.diagram.navigator.MicroservicesArchitectureAbstractNavigatorItem>();
 			Node sv = (Node) view;
+			MicroservicesArchitecture.diagram.navigator.MicroservicesArchitectureNavigatorGroup outgoinglinks = new MicroservicesArchitecture.diagram.navigator.MicroservicesArchitectureNavigatorGroup(
+					MicroservicesArchitecture.diagram.part.Messages.NavigatorGroupName_MicroService_2001_outgoinglinks,
+					"icons/outgoingLinksNavigatorGroup.gif", parentElement); //$NON-NLS-1$
 			Collection<View> connectedViews;
 			connectedViews = getChildrenByType(Collections.singleton(sv),
 					MicroservicesArchitecture.diagram.part.MicroservicesArchitectureVisualIDRegistry.getType(
@@ -265,6 +280,57 @@ public class MicroservicesArchitectureNavigatorContentProvider implements ICommo
 					MicroservicesArchitecture.diagram.part.MicroservicesArchitectureVisualIDRegistry
 							.getType(MicroservicesArchitecture.diagram.edit.parts.Interface2EditPart.VISUAL_ID));
 			result.addAll(createNavigatorItems(connectedViews, parentElement, false));
+			connectedViews = getOutgoingLinksByType(Collections.singleton(sv),
+					MicroservicesArchitecture.diagram.part.MicroservicesArchitectureVisualIDRegistry
+							.getType(MicroservicesArchitecture.diagram.edit.parts.MicroServiceOwnedEditPart.VISUAL_ID));
+			outgoinglinks.addChildren(createNavigatorItems(connectedViews, outgoinglinks, true));
+			if (!outgoinglinks.isEmpty()) {
+				result.add(outgoinglinks);
+			}
+			return result.toArray();
+		}
+
+		case MicroservicesArchitecture.diagram.edit.parts.DeveloperEditPart.VISUAL_ID: {
+			LinkedList<MicroservicesArchitecture.diagram.navigator.MicroservicesArchitectureAbstractNavigatorItem> result = new LinkedList<MicroservicesArchitecture.diagram.navigator.MicroservicesArchitectureAbstractNavigatorItem>();
+			Node sv = (Node) view;
+			MicroservicesArchitecture.diagram.navigator.MicroservicesArchitectureNavigatorGroup incominglinks = new MicroservicesArchitecture.diagram.navigator.MicroservicesArchitectureNavigatorGroup(
+					MicroservicesArchitecture.diagram.part.Messages.NavigatorGroupName_Developer_2002_incominglinks,
+					"icons/incomingLinksNavigatorGroup.gif", parentElement); //$NON-NLS-1$
+			Collection<View> connectedViews;
+			connectedViews = getIncomingLinksByType(Collections.singleton(sv),
+					MicroservicesArchitecture.diagram.part.MicroservicesArchitectureVisualIDRegistry
+							.getType(MicroservicesArchitecture.diagram.edit.parts.TeamComposedByEditPart.VISUAL_ID));
+			incominglinks.addChildren(createNavigatorItems(connectedViews, incominglinks, true));
+			if (!incominglinks.isEmpty()) {
+				result.add(incominglinks);
+			}
+			return result.toArray();
+		}
+
+		case MicroservicesArchitecture.diagram.edit.parts.TeamEditPart.VISUAL_ID: {
+			LinkedList<MicroservicesArchitecture.diagram.navigator.MicroservicesArchitectureAbstractNavigatorItem> result = new LinkedList<MicroservicesArchitecture.diagram.navigator.MicroservicesArchitectureAbstractNavigatorItem>();
+			Node sv = (Node) view;
+			MicroservicesArchitecture.diagram.navigator.MicroservicesArchitectureNavigatorGroup incominglinks = new MicroservicesArchitecture.diagram.navigator.MicroservicesArchitectureNavigatorGroup(
+					MicroservicesArchitecture.diagram.part.Messages.NavigatorGroupName_Team_2003_incominglinks,
+					"icons/incomingLinksNavigatorGroup.gif", parentElement); //$NON-NLS-1$
+			MicroservicesArchitecture.diagram.navigator.MicroservicesArchitectureNavigatorGroup outgoinglinks = new MicroservicesArchitecture.diagram.navigator.MicroservicesArchitectureNavigatorGroup(
+					MicroservicesArchitecture.diagram.part.Messages.NavigatorGroupName_Team_2003_outgoinglinks,
+					"icons/outgoingLinksNavigatorGroup.gif", parentElement); //$NON-NLS-1$
+			Collection<View> connectedViews;
+			connectedViews = getIncomingLinksByType(Collections.singleton(sv),
+					MicroservicesArchitecture.diagram.part.MicroservicesArchitectureVisualIDRegistry
+							.getType(MicroservicesArchitecture.diagram.edit.parts.MicroServiceOwnedEditPart.VISUAL_ID));
+			incominglinks.addChildren(createNavigatorItems(connectedViews, incominglinks, true));
+			connectedViews = getOutgoingLinksByType(Collections.singleton(sv),
+					MicroservicesArchitecture.diagram.part.MicroservicesArchitectureVisualIDRegistry
+							.getType(MicroservicesArchitecture.diagram.edit.parts.TeamComposedByEditPart.VISUAL_ID));
+			outgoinglinks.addChildren(createNavigatorItems(connectedViews, outgoinglinks, true));
+			if (!incominglinks.isEmpty()) {
+				result.add(incominglinks);
+			}
+			if (!outgoinglinks.isEmpty()) {
+				result.add(outgoinglinks);
+			}
 			return result.toArray();
 		}
 
@@ -347,6 +413,60 @@ public class MicroservicesArchitectureNavigatorContentProvider implements ICommo
 			connectedViews = getLinksSourceByType(Collections.singleton(sv),
 					MicroservicesArchitecture.diagram.part.MicroservicesArchitectureVisualIDRegistry
 							.getType(MicroservicesArchitecture.diagram.edit.parts.Interface2EditPart.VISUAL_ID));
+			source.addChildren(createNavigatorItems(connectedViews, source, true));
+			if (!target.isEmpty()) {
+				result.add(target);
+			}
+			if (!source.isEmpty()) {
+				result.add(source);
+			}
+			return result.toArray();
+		}
+
+		case MicroservicesArchitecture.diagram.edit.parts.MicroServiceOwnedEditPart.VISUAL_ID: {
+			LinkedList<MicroservicesArchitecture.diagram.navigator.MicroservicesArchitectureAbstractNavigatorItem> result = new LinkedList<MicroservicesArchitecture.diagram.navigator.MicroservicesArchitectureAbstractNavigatorItem>();
+			Edge sv = (Edge) view;
+			MicroservicesArchitecture.diagram.navigator.MicroservicesArchitectureNavigatorGroup target = new MicroservicesArchitecture.diagram.navigator.MicroservicesArchitectureNavigatorGroup(
+					MicroservicesArchitecture.diagram.part.Messages.NavigatorGroupName_MicroServiceOwned_4002_target,
+					"icons/linkTargetNavigatorGroup.gif", parentElement); //$NON-NLS-1$
+			MicroservicesArchitecture.diagram.navigator.MicroservicesArchitectureNavigatorGroup source = new MicroservicesArchitecture.diagram.navigator.MicroservicesArchitectureNavigatorGroup(
+					MicroservicesArchitecture.diagram.part.Messages.NavigatorGroupName_MicroServiceOwned_4002_source,
+					"icons/linkSourceNavigatorGroup.gif", parentElement); //$NON-NLS-1$
+			Collection<View> connectedViews;
+			connectedViews = getLinksTargetByType(Collections.singleton(sv),
+					MicroservicesArchitecture.diagram.part.MicroservicesArchitectureVisualIDRegistry
+							.getType(MicroservicesArchitecture.diagram.edit.parts.TeamEditPart.VISUAL_ID));
+			target.addChildren(createNavigatorItems(connectedViews, target, true));
+			connectedViews = getLinksSourceByType(Collections.singleton(sv),
+					MicroservicesArchitecture.diagram.part.MicroservicesArchitectureVisualIDRegistry
+							.getType(MicroservicesArchitecture.diagram.edit.parts.MicroServiceEditPart.VISUAL_ID));
+			source.addChildren(createNavigatorItems(connectedViews, source, true));
+			if (!target.isEmpty()) {
+				result.add(target);
+			}
+			if (!source.isEmpty()) {
+				result.add(source);
+			}
+			return result.toArray();
+		}
+
+		case MicroservicesArchitecture.diagram.edit.parts.TeamComposedByEditPart.VISUAL_ID: {
+			LinkedList<MicroservicesArchitecture.diagram.navigator.MicroservicesArchitectureAbstractNavigatorItem> result = new LinkedList<MicroservicesArchitecture.diagram.navigator.MicroservicesArchitectureAbstractNavigatorItem>();
+			Edge sv = (Edge) view;
+			MicroservicesArchitecture.diagram.navigator.MicroservicesArchitectureNavigatorGroup target = new MicroservicesArchitecture.diagram.navigator.MicroservicesArchitectureNavigatorGroup(
+					MicroservicesArchitecture.diagram.part.Messages.NavigatorGroupName_TeamComposedBy_4003_target,
+					"icons/linkTargetNavigatorGroup.gif", parentElement); //$NON-NLS-1$
+			MicroservicesArchitecture.diagram.navigator.MicroservicesArchitectureNavigatorGroup source = new MicroservicesArchitecture.diagram.navigator.MicroservicesArchitectureNavigatorGroup(
+					MicroservicesArchitecture.diagram.part.Messages.NavigatorGroupName_TeamComposedBy_4003_source,
+					"icons/linkSourceNavigatorGroup.gif", parentElement); //$NON-NLS-1$
+			Collection<View> connectedViews;
+			connectedViews = getLinksTargetByType(Collections.singleton(sv),
+					MicroservicesArchitecture.diagram.part.MicroservicesArchitectureVisualIDRegistry
+							.getType(MicroservicesArchitecture.diagram.edit.parts.DeveloperEditPart.VISUAL_ID));
+			target.addChildren(createNavigatorItems(connectedViews, target, true));
+			connectedViews = getLinksSourceByType(Collections.singleton(sv),
+					MicroservicesArchitecture.diagram.part.MicroservicesArchitectureVisualIDRegistry
+							.getType(MicroservicesArchitecture.diagram.edit.parts.TeamEditPart.VISUAL_ID));
 			source.addChildren(createNavigatorItems(connectedViews, source, true));
 			if (!target.isEmpty()) {
 				result.add(target);

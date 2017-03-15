@@ -33,11 +33,17 @@ public class MicroservicesArchitectureEditPartFactory implements EditPartFactory
 			case MicroservicesArchitecture.diagram.edit.parts.MicroServiceNameEditPart.VISUAL_ID:
 				return new MicroservicesArchitecture.diagram.edit.parts.MicroServiceNameEditPart(view);
 
+			case MicroservicesArchitecture.diagram.edit.parts.TeamEditPart.VISUAL_ID:
+				return new MicroservicesArchitecture.diagram.edit.parts.TeamEditPart(view);
+
+			case MicroservicesArchitecture.diagram.edit.parts.TeamNameEditPart.VISUAL_ID:
+				return new MicroservicesArchitecture.diagram.edit.parts.TeamNameEditPart(view);
+
 			case MicroservicesArchitecture.diagram.edit.parts.DeveloperEditPart.VISUAL_ID:
 				return new MicroservicesArchitecture.diagram.edit.parts.DeveloperEditPart(view);
 
-			case MicroservicesArchitecture.diagram.edit.parts.DeveloperNameEditPart.VISUAL_ID:
-				return new MicroservicesArchitecture.diagram.edit.parts.DeveloperNameEditPart(view);
+			case MicroservicesArchitecture.diagram.edit.parts.DeveloperEmailEditPart.VISUAL_ID:
+				return new MicroservicesArchitecture.diagram.edit.parts.DeveloperEmailEditPart(view);
 
 			case MicroservicesArchitecture.diagram.edit.parts.InterfaceEditPart.VISUAL_ID:
 				return new MicroservicesArchitecture.diagram.edit.parts.InterfaceEditPart(view);
@@ -61,6 +67,18 @@ public class MicroservicesArchitectureEditPartFactory implements EditPartFactory
 
 			case MicroservicesArchitecture.diagram.edit.parts.LinkEditPart.VISUAL_ID:
 				return new MicroservicesArchitecture.diagram.edit.parts.LinkEditPart(view);
+
+			case MicroservicesArchitecture.diagram.edit.parts.MicroServiceOwnedEditPart.VISUAL_ID:
+				return new MicroservicesArchitecture.diagram.edit.parts.MicroServiceOwnedEditPart(view);
+
+			case MicroservicesArchitecture.diagram.edit.parts.WrappingLabelEditPart.VISUAL_ID:
+				return new MicroservicesArchitecture.diagram.edit.parts.WrappingLabelEditPart(view);
+
+			case MicroservicesArchitecture.diagram.edit.parts.TeamComposedByEditPart.VISUAL_ID:
+				return new MicroservicesArchitecture.diagram.edit.parts.TeamComposedByEditPart(view);
+
+			case MicroservicesArchitecture.diagram.edit.parts.WrappingLabel2EditPart.VISUAL_ID:
+				return new MicroservicesArchitecture.diagram.edit.parts.WrappingLabel2EditPart(view);
 
 			}
 		}

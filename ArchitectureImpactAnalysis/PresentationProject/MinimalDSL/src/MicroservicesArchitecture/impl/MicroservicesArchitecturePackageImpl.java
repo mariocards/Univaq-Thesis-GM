@@ -13,6 +13,7 @@ import MicroservicesArchitecture.MicroservicesArchitecturePackage;
 import MicroservicesArchitecture.Product;
 import MicroservicesArchitecture.Team;
 import MicroservicesArchitecture.serviceType;
+
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EEnum;
@@ -682,14 +683,31 @@ public class MicroservicesArchitecturePackageImpl extends EPackageImpl implement
 		createResource(eNS_URI);
 
 		// Create annotations
-		// gmf.diagram
+		// gmf
 		createGmfAnnotations();
-		// gmf.node
+		// gmf.diagram
 		createGmf_1Annotations();
-		// gmf.compartment
+		// gmf.node
 		createGmf_2Annotations();
-		// gmf.link
+		// gmf.compartment
 		createGmf_3Annotations();
+		// gmf.link
+		createGmf_4Annotations();
+	}
+
+	/**
+	 * Initializes the annotations for <b>gmf</b>.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void createGmfAnnotations() {
+		String source = "gmf";	
+		addAnnotation
+		  (this, 
+		   source, 
+		   new String[] {
+		   });
 	}
 
 	/**
@@ -698,7 +716,7 @@ public class MicroservicesArchitecturePackageImpl extends EPackageImpl implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected void createGmfAnnotations() {
+	protected void createGmf_1Annotations() {
 		String source = "gmf.diagram";	
 		addAnnotation
 		  (productEClass, 
@@ -713,7 +731,7 @@ public class MicroservicesArchitecturePackageImpl extends EPackageImpl implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected void createGmf_1Annotations() {
+	protected void createGmf_2Annotations() {
 		String source = "gmf.node";	
 		addAnnotation
 		  (microServiceEClass, 
@@ -721,28 +739,44 @@ public class MicroservicesArchitecturePackageImpl extends EPackageImpl implement
 		   new String[] {
 			 "label", "name",
 			 "border.style", "solid",
+			 "label.pattern", "    {0}",
 			 "label.icon", "false",
 			 "figure", "rectangle",
-			 "color", "178,255,102"
+			 "border.color", "0,153,153",
+			 "border.width", "4"
 		   });	
 		addAnnotation
 		  (developerEClass, 
 		   source, 
 		   new String[] {
-			 "label", "name",
+			 "border.width", "3",
+			 "border.color", "66,133,244",
+			 "label", "email",
 			 "border.style", "dot",
 			 "label.icon", "false",
-			 "figure", "rounded"
+			 "figure", "ellipse"
 		   });	
 		addAnnotation
 		  (interfaceEClass, 
 		   source, 
 		   new String[] {
-			 "color", "104,199,246",
 			 "label", "endPoint",
-			 "border.style", "dash",
+			 "border.style", "solid",
 			 "label.icon", "false",
 			 "figure", "rectangle"
+		   });	
+		addAnnotation
+		  (teamEClass, 
+		   source, 
+		   new String[] {
+			 "border.width", "3",
+			 "border.color", "66,133,244",
+			 "label", "name",
+			 "label.placement", "internal",
+			 "border.style", "solid",
+			 "label.icon", "false",
+			 "figure", "ellipse",
+			 "size", "150,70"
 		   });
 	}
 
@@ -752,7 +786,7 @@ public class MicroservicesArchitecturePackageImpl extends EPackageImpl implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected void createGmf_2Annotations() {
+	protected void createGmf_3Annotations() {
 		String source = "gmf.compartment";	
 		addAnnotation
 		  (getMicroService_Expose(), 
@@ -776,18 +810,33 @@ public class MicroservicesArchitecturePackageImpl extends EPackageImpl implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected void createGmf_3Annotations() {
+	protected void createGmf_4Annotations() {
 		String source = "gmf.link";	
+		addAnnotation
+		  (getMicroService_Owned(), 
+		   source, 
+		   new String[] {
+			 "target.decoration", "arrow",
+			 "style", "dash"
+		   });	
 		addAnnotation
 		  (linkEClass, 
 		   source, 
 		   new String[] {
-			 "color", "255,0,0",
+			 "color", "0,26,26",
 			 "label.icon", "false",
 			 "source", "source",
 			 "target", "target",
 			 "source.decoration", "filledrhomb",
 			 "target.decoration", "arrow"
+		   });	
+		addAnnotation
+		  (getTeam_ComposedBy(), 
+		   source, 
+		   new String[] {
+			 "color", "66,133,244",
+			 "target.decoration", "none",
+			 "style", "dash"
 		   });
 	}
 

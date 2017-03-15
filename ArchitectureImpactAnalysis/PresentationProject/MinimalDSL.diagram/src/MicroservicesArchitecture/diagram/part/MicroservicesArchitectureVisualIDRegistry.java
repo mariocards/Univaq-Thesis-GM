@@ -120,6 +120,10 @@ public class MicroservicesArchitectureVisualIDRegistry {
 					.isSuperTypeOf(domainElement.eClass())) {
 				return MicroservicesArchitecture.diagram.edit.parts.MicroServiceEditPart.VISUAL_ID;
 			}
+			if (MicroservicesArchitecture.MicroservicesArchitecturePackage.eINSTANCE.getTeam()
+					.isSuperTypeOf(domainElement.eClass())) {
+				return MicroservicesArchitecture.diagram.edit.parts.TeamEditPart.VISUAL_ID;
+			}
 			if (MicroservicesArchitecture.MicroservicesArchitecturePackage.eINSTANCE.getDeveloper()
 					.isSuperTypeOf(domainElement.eClass())) {
 				return MicroservicesArchitecture.diagram.edit.parts.DeveloperEditPart.VISUAL_ID;
@@ -167,6 +171,9 @@ public class MicroservicesArchitectureVisualIDRegistry {
 			if (MicroservicesArchitecture.diagram.edit.parts.MicroServiceEditPart.VISUAL_ID == nodeVisualID) {
 				return true;
 			}
+			if (MicroservicesArchitecture.diagram.edit.parts.TeamEditPart.VISUAL_ID == nodeVisualID) {
+				return true;
+			}
 			if (MicroservicesArchitecture.diagram.edit.parts.DeveloperEditPart.VISUAL_ID == nodeVisualID) {
 				return true;
 			}
@@ -182,8 +189,13 @@ public class MicroservicesArchitectureVisualIDRegistry {
 				return true;
 			}
 			break;
+		case MicroservicesArchitecture.diagram.edit.parts.TeamEditPart.VISUAL_ID:
+			if (MicroservicesArchitecture.diagram.edit.parts.TeamNameEditPart.VISUAL_ID == nodeVisualID) {
+				return true;
+			}
+			break;
 		case MicroservicesArchitecture.diagram.edit.parts.DeveloperEditPart.VISUAL_ID:
-			if (MicroservicesArchitecture.diagram.edit.parts.DeveloperNameEditPart.VISUAL_ID == nodeVisualID) {
+			if (MicroservicesArchitecture.diagram.edit.parts.DeveloperEmailEditPart.VISUAL_ID == nodeVisualID) {
 				return true;
 			}
 			break;
@@ -204,6 +216,16 @@ public class MicroservicesArchitectureVisualIDRegistry {
 			break;
 		case MicroservicesArchitecture.diagram.edit.parts.MicroServiceMicroServiceRequireCompartmentEditPart.VISUAL_ID:
 			if (MicroservicesArchitecture.diagram.edit.parts.Interface2EditPart.VISUAL_ID == nodeVisualID) {
+				return true;
+			}
+			break;
+		case MicroservicesArchitecture.diagram.edit.parts.MicroServiceOwnedEditPart.VISUAL_ID:
+			if (MicroservicesArchitecture.diagram.edit.parts.WrappingLabelEditPart.VISUAL_ID == nodeVisualID) {
+				return true;
+			}
+			break;
+		case MicroservicesArchitecture.diagram.edit.parts.TeamComposedByEditPart.VISUAL_ID:
+			if (MicroservicesArchitecture.diagram.edit.parts.WrappingLabel2EditPart.VISUAL_ID == nodeVisualID) {
 				return true;
 			}
 			break;
@@ -269,6 +291,7 @@ public class MicroservicesArchitectureVisualIDRegistry {
 		case MicroservicesArchitecture.diagram.edit.parts.ProductEditPart.VISUAL_ID:
 			return false;
 		case MicroservicesArchitecture.diagram.edit.parts.DeveloperEditPart.VISUAL_ID:
+		case MicroservicesArchitecture.diagram.edit.parts.TeamEditPart.VISUAL_ID:
 		case MicroservicesArchitecture.diagram.edit.parts.InterfaceEditPart.VISUAL_ID:
 		case MicroservicesArchitecture.diagram.edit.parts.Interface2EditPart.VISUAL_ID:
 			return true;

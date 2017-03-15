@@ -4,6 +4,7 @@
 package MicroservicesArchitecture.diagram.navigator;
 
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.gmf.runtime.common.ui.services.parser.CommonParserHint;
 import org.eclipse.gmf.runtime.common.ui.services.parser.IParser;
 import org.eclipse.gmf.runtime.common.ui.services.parser.ParserOptions;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
@@ -94,6 +95,9 @@ public class MicroservicesArchitectureNavigatorLabelProvider extends LabelProvid
 		case MicroservicesArchitecture.diagram.edit.parts.DeveloperEditPart.VISUAL_ID:
 			return getImage("Navigator?TopLevelNode?http://it.univaq.thesis.msa.arch?Developer", //$NON-NLS-1$
 					MicroservicesArchitecture.diagram.providers.MicroservicesArchitectureElementTypes.Developer_2002);
+		case MicroservicesArchitecture.diagram.edit.parts.TeamEditPart.VISUAL_ID:
+			return getImage("Navigator?TopLevelNode?http://it.univaq.thesis.msa.arch?Team", //$NON-NLS-1$
+					MicroservicesArchitecture.diagram.providers.MicroservicesArchitectureElementTypes.Team_2003);
 		case MicroservicesArchitecture.diagram.edit.parts.InterfaceEditPart.VISUAL_ID:
 			return getImage("Navigator?Node?http://it.univaq.thesis.msa.arch?Interface", //$NON-NLS-1$
 					MicroservicesArchitecture.diagram.providers.MicroservicesArchitectureElementTypes.Interface_3001);
@@ -103,6 +107,12 @@ public class MicroservicesArchitectureNavigatorLabelProvider extends LabelProvid
 		case MicroservicesArchitecture.diagram.edit.parts.LinkEditPart.VISUAL_ID:
 			return getImage("Navigator?Link?http://it.univaq.thesis.msa.arch?Link", //$NON-NLS-1$
 					MicroservicesArchitecture.diagram.providers.MicroservicesArchitectureElementTypes.Link_4001);
+		case MicroservicesArchitecture.diagram.edit.parts.MicroServiceOwnedEditPart.VISUAL_ID:
+			return getImage("Navigator?Link?http://it.univaq.thesis.msa.arch?MicroService?owned", //$NON-NLS-1$
+					MicroservicesArchitecture.diagram.providers.MicroservicesArchitectureElementTypes.MicroServiceOwned_4002);
+		case MicroservicesArchitecture.diagram.edit.parts.TeamComposedByEditPart.VISUAL_ID:
+			return getImage("Navigator?Link?http://it.univaq.thesis.msa.arch?Team?composedBy", //$NON-NLS-1$
+					MicroservicesArchitecture.diagram.providers.MicroservicesArchitectureElementTypes.TeamComposedBy_4003);
 		}
 		return getImage("Navigator?UnknownElement", null); //$NON-NLS-1$
 	}
@@ -171,12 +181,18 @@ public class MicroservicesArchitectureNavigatorLabelProvider extends LabelProvid
 			return getMicroService_2001Text(view);
 		case MicroservicesArchitecture.diagram.edit.parts.DeveloperEditPart.VISUAL_ID:
 			return getDeveloper_2002Text(view);
+		case MicroservicesArchitecture.diagram.edit.parts.TeamEditPart.VISUAL_ID:
+			return getTeam_2003Text(view);
 		case MicroservicesArchitecture.diagram.edit.parts.InterfaceEditPart.VISUAL_ID:
 			return getInterface_3001Text(view);
 		case MicroservicesArchitecture.diagram.edit.parts.Interface2EditPart.VISUAL_ID:
 			return getInterface_3002Text(view);
 		case MicroservicesArchitecture.diagram.edit.parts.LinkEditPart.VISUAL_ID:
 			return getLink_4001Text(view);
+		case MicroservicesArchitecture.diagram.edit.parts.MicroServiceOwnedEditPart.VISUAL_ID:
+			return getMicroServiceOwned_4002Text(view);
+		case MicroservicesArchitecture.diagram.edit.parts.TeamComposedByEditPart.VISUAL_ID:
+			return getTeamComposedBy_4003Text(view);
 		}
 		return getUnknownElementText(view);
 	}
@@ -222,13 +238,32 @@ public class MicroservicesArchitectureNavigatorLabelProvider extends LabelProvid
 				MicroservicesArchitecture.diagram.providers.MicroservicesArchitectureElementTypes.Developer_2002,
 				view.getElement() != null ? view.getElement() : view,
 				MicroservicesArchitecture.diagram.part.MicroservicesArchitectureVisualIDRegistry
-						.getType(MicroservicesArchitecture.diagram.edit.parts.DeveloperNameEditPart.VISUAL_ID));
+						.getType(MicroservicesArchitecture.diagram.edit.parts.DeveloperEmailEditPart.VISUAL_ID));
 		if (parser != null) {
 			return parser.getPrintString(new EObjectAdapter(view.getElement() != null ? view.getElement() : view),
 					ParserOptions.NONE.intValue());
 		} else {
 			MicroservicesArchitecture.diagram.part.MicroservicesArchitectureDiagramEditorPlugin.getInstance()
 					.logError("Parser was not found for label " + 5004); //$NON-NLS-1$
+			return ""; //$NON-NLS-1$
+		}
+	}
+
+	/**
+	* @generated
+	*/
+	private String getTeam_2003Text(View view) {
+		IParser parser = MicroservicesArchitecture.diagram.providers.MicroservicesArchitectureParserProvider.getParser(
+				MicroservicesArchitecture.diagram.providers.MicroservicesArchitectureElementTypes.Team_2003,
+				view.getElement() != null ? view.getElement() : view,
+				MicroservicesArchitecture.diagram.part.MicroservicesArchitectureVisualIDRegistry
+						.getType(MicroservicesArchitecture.diagram.edit.parts.TeamNameEditPart.VISUAL_ID));
+		if (parser != null) {
+			return parser.getPrintString(new EObjectAdapter(view.getElement() != null ? view.getElement() : view),
+					ParserOptions.NONE.intValue());
+		} else {
+			MicroservicesArchitecture.diagram.part.MicroservicesArchitectureDiagramEditorPlugin.getInstance()
+					.logError("Parser was not found for label " + 5005); //$NON-NLS-1$
 			return ""; //$NON-NLS-1$
 		}
 	}
@@ -281,6 +316,40 @@ public class MicroservicesArchitectureNavigatorLabelProvider extends LabelProvid
 		} else {
 			MicroservicesArchitecture.diagram.part.MicroservicesArchitectureDiagramEditorPlugin.getInstance()
 					.logError("No domain element for view with visualID = " + 4001); //$NON-NLS-1$
+			return ""; //$NON-NLS-1$
+		}
+	}
+
+	/**
+	* @generated
+	*/
+	private String getMicroServiceOwned_4002Text(View view) {
+		IParser parser = MicroservicesArchitecture.diagram.providers.MicroservicesArchitectureParserProvider.getParser(
+				MicroservicesArchitecture.diagram.providers.MicroservicesArchitectureElementTypes.MicroServiceOwned_4002,
+				view.getElement() != null ? view.getElement() : view, CommonParserHint.DESCRIPTION);
+		if (parser != null) {
+			return parser.getPrintString(new EObjectAdapter(view.getElement() != null ? view.getElement() : view),
+					ParserOptions.NONE.intValue());
+		} else {
+			MicroservicesArchitecture.diagram.part.MicroservicesArchitectureDiagramEditorPlugin.getInstance()
+					.logError("Parser was not found for label " + 6001); //$NON-NLS-1$
+			return ""; //$NON-NLS-1$
+		}
+	}
+
+	/**
+	* @generated
+	*/
+	private String getTeamComposedBy_4003Text(View view) {
+		IParser parser = MicroservicesArchitecture.diagram.providers.MicroservicesArchitectureParserProvider.getParser(
+				MicroservicesArchitecture.diagram.providers.MicroservicesArchitectureElementTypes.TeamComposedBy_4003,
+				view.getElement() != null ? view.getElement() : view, CommonParserHint.DESCRIPTION);
+		if (parser != null) {
+			return parser.getPrintString(new EObjectAdapter(view.getElement() != null ? view.getElement() : view),
+					ParserOptions.NONE.intValue());
+		} else {
+			MicroservicesArchitecture.diagram.part.MicroservicesArchitectureDiagramEditorPlugin.getInstance()
+					.logError("Parser was not found for label " + 6002); //$NON-NLS-1$
 			return ""; //$NON-NLS-1$
 		}
 	}

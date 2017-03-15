@@ -56,6 +56,10 @@ public class MicroservicesArchitectureElementTypes {
 	/**
 	* @generated
 	*/
+	public static final IElementType Team_2003 = getElementType("MinimalDSL.diagram.Team_2003"); //$NON-NLS-1$
+	/**
+	* @generated
+	*/
 	public static final IElementType Developer_2002 = getElementType("MinimalDSL.diagram.Developer_2002"); //$NON-NLS-1$
 	/**
 	* @generated
@@ -69,6 +73,15 @@ public class MicroservicesArchitectureElementTypes {
 	* @generated
 	*/
 	public static final IElementType Link_4001 = getElementType("MinimalDSL.diagram.Link_4001"); //$NON-NLS-1$
+	/**
+	* @generated
+	*/
+	public static final IElementType MicroServiceOwned_4002 = getElementType(
+			"MinimalDSL.diagram.MicroServiceOwned_4002"); //$NON-NLS-1$
+	/**
+	* @generated
+	*/
+	public static final IElementType TeamComposedBy_4003 = getElementType("MinimalDSL.diagram.TeamComposedBy_4003"); //$NON-NLS-1$
 
 	/**
 	* @generated
@@ -114,6 +127,8 @@ public class MicroservicesArchitectureElementTypes {
 			elements.put(MicroService_2001,
 					MicroservicesArchitecture.MicroservicesArchitecturePackage.eINSTANCE.getMicroService());
 
+			elements.put(Team_2003, MicroservicesArchitecture.MicroservicesArchitecturePackage.eINSTANCE.getTeam());
+
 			elements.put(Developer_2002,
 					MicroservicesArchitecture.MicroservicesArchitecturePackage.eINSTANCE.getDeveloper());
 
@@ -124,6 +139,12 @@ public class MicroservicesArchitectureElementTypes {
 					MicroservicesArchitecture.MicroservicesArchitecturePackage.eINSTANCE.getInterface());
 
 			elements.put(Link_4001, MicroservicesArchitecture.MicroservicesArchitecturePackage.eINSTANCE.getLink());
+
+			elements.put(MicroServiceOwned_4002,
+					MicroservicesArchitecture.MicroservicesArchitecturePackage.eINSTANCE.getMicroService_Owned());
+
+			elements.put(TeamComposedBy_4003,
+					MicroservicesArchitecture.MicroservicesArchitecturePackage.eINSTANCE.getTeam_ComposedBy());
 		}
 		return (ENamedElement) elements.get(type);
 	}
@@ -143,10 +164,13 @@ public class MicroservicesArchitectureElementTypes {
 			KNOWN_ELEMENT_TYPES = new HashSet<IElementType>();
 			KNOWN_ELEMENT_TYPES.add(Product_1000);
 			KNOWN_ELEMENT_TYPES.add(MicroService_2001);
+			KNOWN_ELEMENT_TYPES.add(Team_2003);
 			KNOWN_ELEMENT_TYPES.add(Developer_2002);
 			KNOWN_ELEMENT_TYPES.add(Interface_3001);
 			KNOWN_ELEMENT_TYPES.add(Interface_3002);
 			KNOWN_ELEMENT_TYPES.add(Link_4001);
+			KNOWN_ELEMENT_TYPES.add(MicroServiceOwned_4002);
+			KNOWN_ELEMENT_TYPES.add(TeamComposedBy_4003);
 		}
 		return KNOWN_ELEMENT_TYPES.contains(elementType);
 	}
@@ -160,6 +184,8 @@ public class MicroservicesArchitectureElementTypes {
 			return Product_1000;
 		case MicroservicesArchitecture.diagram.edit.parts.MicroServiceEditPart.VISUAL_ID:
 			return MicroService_2001;
+		case MicroservicesArchitecture.diagram.edit.parts.TeamEditPart.VISUAL_ID:
+			return Team_2003;
 		case MicroservicesArchitecture.diagram.edit.parts.DeveloperEditPart.VISUAL_ID:
 			return Developer_2002;
 		case MicroservicesArchitecture.diagram.edit.parts.InterfaceEditPart.VISUAL_ID:
@@ -168,6 +194,10 @@ public class MicroservicesArchitectureElementTypes {
 			return Interface_3002;
 		case MicroservicesArchitecture.diagram.edit.parts.LinkEditPart.VISUAL_ID:
 			return Link_4001;
+		case MicroservicesArchitecture.diagram.edit.parts.MicroServiceOwnedEditPart.VISUAL_ID:
+			return MicroServiceOwned_4002;
+		case MicroservicesArchitecture.diagram.edit.parts.TeamComposedByEditPart.VISUAL_ID:
+			return TeamComposedBy_4003;
 		}
 		return null;
 	}

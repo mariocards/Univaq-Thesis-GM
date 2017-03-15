@@ -19,7 +19,7 @@ package MicroservicesArchitecture;
  * </ul>
  *
  * @see MicroservicesArchitecture.MicroservicesArchitecturePackage#getInterface()
- * @model annotation="gmf.node color='104,199,246' label='endPoint' border.style='dash' label.icon='false' figure='rectangle'"
+ * @model annotation="gmf.node label='endPoint' border.style='solid' label.icon='false' figure='rectangle'"
  * @generated
  */
 public interface Interface extends Element {

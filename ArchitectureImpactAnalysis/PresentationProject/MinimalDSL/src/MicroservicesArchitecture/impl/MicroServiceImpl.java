@@ -9,6 +9,7 @@ import MicroservicesArchitecture.MicroservicesArchitecturePackage;
 import MicroservicesArchitecture.Product;
 import MicroservicesArchitecture.Team;
 import MicroservicesArchitecture.serviceType;
+
 import java.util.Collection;
 
 import org.eclipse.emf.common.notify.Notification;

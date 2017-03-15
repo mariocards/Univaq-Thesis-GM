@@ -286,12 +286,42 @@ public class Messages extends NLS {
 	/**
 	* @generated
 	*/
-	public static String Link1CreationTool_title;
+	public static String Team4CreationTool_title;
 
 	/**
 	* @generated
 	*/
-	public static String Link1CreationTool_desc;
+	public static String Team4CreationTool_desc;
+
+	/**
+	* @generated
+	*/
+	public static String ComposedBy1CreationTool_title;
+
+	/**
+	* @generated
+	*/
+	public static String ComposedBy1CreationTool_desc;
+
+	/**
+	* @generated
+	*/
+	public static String Link2CreationTool_title;
+
+	/**
+	* @generated
+	*/
+	public static String Link2CreationTool_desc;
+
+	/**
+	* @generated
+	*/
+	public static String Owned3CreationTool_title;
+
+	/**
+	* @generated
+	*/
+	public static String Owned3CreationTool_desc;
 
 	/**
 	* @generated
@@ -312,6 +342,26 @@ public class Messages extends NLS {
 	* @generated
 	*/
 	public static String NavigatorGroupName_Product_1000_links;
+
+	/**
+	* @generated
+	*/
+	public static String NavigatorGroupName_MicroService_2001_outgoinglinks;
+
+	/**
+	* @generated
+	*/
+	public static String NavigatorGroupName_Developer_2002_incominglinks;
+
+	/**
+	* @generated
+	*/
+	public static String NavigatorGroupName_Team_2003_incominglinks;
+
+	/**
+	* @generated
+	*/
+	public static String NavigatorGroupName_Team_2003_outgoinglinks;
 
 	/**
 	* @generated
@@ -342,6 +392,26 @@ public class Messages extends NLS {
 	* @generated
 	*/
 	public static String NavigatorGroupName_Link_4001_source;
+
+	/**
+	* @generated
+	*/
+	public static String NavigatorGroupName_MicroServiceOwned_4002_target;
+
+	/**
+	* @generated
+	*/
+	public static String NavigatorGroupName_MicroServiceOwned_4002_source;
+
+	/**
+	* @generated
+	*/
+	public static String NavigatorGroupName_TeamComposedBy_4003_target;
+
+	/**
+	* @generated
+	*/
+	public static String NavigatorGroupName_TeamComposedBy_4003_source;
 
 	/**
 	* @generated
